@@ -17,6 +17,8 @@
 		0C2637B0228AD126001505AA /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637AF228AD126001505AA /* DataService.swift */; };
 		0C2637B2228AD6B8001505AA /* ItemsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637B1228AD6B8001505AA /* ItemsCell.swift */; };
 		0C2637B6228B0C88001505AA /* ItemDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637B5228B0C88001505AA /* ItemDetailsVC.swift */; };
+		0C2637B9228B4029001505AA /* ItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637B8228B4029001505AA /* ItemModel.swift */; };
+		0C2637BD228B44EA001505AA /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637BC228B44EA001505AA /* LocationModel.swift */; };
 		A2AE1CA0131DDA852060E5AB /* Pods_DeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */; };
 		B5CDCA276E26237600F42DB8 /* Pods_DeliveryAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00A5BA1A24F738407E96F3BB /* Pods_DeliveryAppTests.framework */; };
 /* End PBXBuildFile section */
@@ -47,6 +49,8 @@
 		0C2637AF228AD126001505AA /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		0C2637B1228AD6B8001505AA /* ItemsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsCell.swift; sourceTree = "<group>"; };
 		0C2637B5228B0C88001505AA /* ItemDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailsVC.swift; sourceTree = "<group>"; };
+		0C2637B8228B4029001505AA /* ItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemModel.swift; sourceTree = "<group>"; };
+		0C2637BC228B44EA001505AA /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		590CD1430912CD72F1E85736 /* Pods-DeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeliveryApp.debug.xcconfig"; path = "Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CEB0E4CC73FABBCAF776EA79 /* Pods-DeliveryApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeliveryApp.release.xcconfig"; path = "Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 		0C263787228AC513001505AA /* DeliveryApp */ = {
 			isa = PBXGroup;
 			children = (
+				0C2637B7228B4012001505AA /* Models */,
 				0C2637AE228AD0EA001505AA /* Services */,
 				0C2637AD228AC89A001505AA /* Controllers */,
 				0C2637AB228AC889001505AA /* Views */,
@@ -142,6 +147,15 @@
 				0C2637AF228AD126001505AA /* DataService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		0C2637B7228B4012001505AA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C2637B8228B4029001505AA /* ItemModel.swift */,
+				0C2637BC228B44EA001505AA /* LocationModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		201802C2F8179577B62904BD /* Pods */ = {
@@ -276,6 +290,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -283,6 +298,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -362,11 +378,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C2637BD228B44EA001505AA /* LocationModel.swift in Sources */,
 				0C2637B6228B0C88001505AA /* ItemDetailsVC.swift in Sources */,
 				0C26378B228AC513001505AA /* HomeVC.swift in Sources */,
 				0C2637B2228AD6B8001505AA /* ItemsCell.swift in Sources */,
 				0C263791228AC513001505AA /* DeliveryApp.xcdatamodeld in Sources */,
 				0C263789228AC513001505AA /* AppDelegate.swift in Sources */,
+				0C2637B9228B4029001505AA /* ItemModel.swift in Sources */,
 				0C2637B0228AD126001505AA /* DataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

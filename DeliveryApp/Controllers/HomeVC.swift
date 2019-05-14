@@ -11,6 +11,7 @@ import UIKit
 class HomeVC: UIViewController {
     
     var deliverTableView = UITableView()
+    var itemsArray: [ItemModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,12 @@ class HomeVC: UIViewController {
         
         deliverTableView.estimatedRowHeight = 100
         deliverTableView.rowHeight = UITableView.automaticDimension
+        
+        DataService.instance.fetchData(offset: 0) { (items) in
+            for item in items {
+                self.itemsArray.append(item)
+            }
+        }
     }
     
     func addElements() {
@@ -54,7 +61,7 @@ class HomeVC: UIViewController {
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return itemsArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

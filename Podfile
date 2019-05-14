@@ -10,6 +10,7 @@ target 'DeliveryApp' do
   pod 'Alamofire'
   pod 'AlamofireImage'
   pod 'GoogleMaps'
+  pod 'SwiftyJSON'
 
   target 'DeliveryAppTests' do
     inherit! :search_paths
