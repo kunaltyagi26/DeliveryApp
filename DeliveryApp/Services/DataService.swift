@@ -15,4 +15,8 @@ class DataService {
     static let instance = DataService()
     
     fileprivate let baseUrl = "http://mock-api-mobile.dev.lalamove.com/deliveries"
+    
+    func fetchData() {
+        
+    }
 }

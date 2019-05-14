@@ -22,6 +22,8 @@ class ItemDetailsVC: UIViewController {
         addElements()
         addConstraints()
         
+        self.title = "Delivery Details"
+        
         let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
 
@@ -31,7 +33,6 @@ class ItemDetailsVC: UIViewController {
         
         mapView = {
             let view = UIView()
-            view.backgroundColor = .white
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -77,7 +78,6 @@ class ItemDetailsVC: UIViewController {
         
         itemView.topAnchor.constraint(equalTo: mapView.bottomAnchor).isActive = true
         itemView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        //itemView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         itemView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         itemView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15).isActive = true
         
