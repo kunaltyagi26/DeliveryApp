@@ -15,6 +15,7 @@ class ItemDetailsVC: UIViewController {
     var itemImageView = UIImageView()
     var itemDescription = UILabel()
     var mapView = UIView()
+    var mView: GMSMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,15 +25,13 @@ class ItemDetailsVC: UIViewController {
         
         self.title = "Delivery Details"
         
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-
+        setupMap()
     }
     
     func addElements() {
         
         mapView = {
-            let view = UIView()
+            let view = GMSMapView()
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -90,6 +89,20 @@ class ItemDetailsVC: UIViewController {
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor).isActive = true
         itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
         itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor).isActive = true
+        
+    }
+    
+    func setupMap() {
+        
+        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
+        mView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        mapView = mView
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
+        marker.title = "Sydney"
+        marker.snippet = "Australia"
+        marker.map = mView
         
     }
     
