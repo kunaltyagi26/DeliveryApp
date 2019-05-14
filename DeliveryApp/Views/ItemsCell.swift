@@ -26,6 +26,8 @@ class ItemsCell: UITableViewCell {
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
+            view.layer.borderWidth = 1.0
+            view.layer.borderColor = UIColor.black.cgColor
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -59,7 +61,7 @@ class ItemsCell: UITableViewCell {
         itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor).isActive = true
         itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
-        itemImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        itemImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
         
         itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor).isActive = true
