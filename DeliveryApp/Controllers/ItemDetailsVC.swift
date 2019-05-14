@@ -31,7 +31,7 @@ class ItemDetailsVC: UIViewController {
         
         mapView = {
             let view = UIView()
-            //view.backgroundColor = .white
+            view.backgroundColor = .white
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -39,6 +39,8 @@ class ItemDetailsVC: UIViewController {
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
+            view.layer.borderWidth = 2.0
+            view.layer.borderColor = UIColor.black.cgColor
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -57,6 +59,8 @@ class ItemDetailsVC: UIViewController {
             return label
         }()
         
+        view.backgroundColor = .white
+        
         itemView.addSubview(itemImageView)
         itemView.addSubview(itemDescription)
         view.addSubview(mapView)
@@ -69,12 +73,13 @@ class ItemDetailsVC: UIViewController {
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        mapView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
+        mapView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.6).isActive = true
         
-        itemView.topAnchor.constraint(equalTo: mapView.topAnchor).isActive = true
+        itemView.topAnchor.constraint(equalTo: mapView.bottomAnchor).isActive = true
         itemView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        itemView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        //itemView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         itemView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        itemView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15).isActive = true
         
         itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor).isActive = true

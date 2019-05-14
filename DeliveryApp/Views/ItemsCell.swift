@@ -26,7 +26,7 @@ class ItemsCell: UITableViewCell {
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
-            view.layer.borderWidth = 1.0
+            view.layer.borderWidth = 2.0
             view.layer.borderColor = UIColor.black.cgColor
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
