@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class ItemsCell: UITableViewCell {
 
-    var itemView = UIView()
-    var itemImageView = UIImageView()
-    var itemDescription = UILabel()
+    fileprivate var itemView = UIView()
+    fileprivate var itemImageView = UIImageView()
+    fileprivate var itemDescription = UILabel()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,6 +80,11 @@ class ItemsCell: UITableViewCell {
         itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
         itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor).isActive = true
         
+    }
+    
+    func update(itemModel: ItemModel) {
+        self.itemDescription.text = itemModel.desc
+        self.itemImageView.af_setImage(withURL: itemModel.imageUrl)
     }
 
 }

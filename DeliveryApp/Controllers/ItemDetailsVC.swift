@@ -8,14 +8,22 @@
 
 import UIKit
 import GoogleMaps
+import AlamofireImage
 
 class ItemDetailsVC: UIViewController {
 
-    var itemView = UIView()
-    var itemImageView = UIImageView()
-    var itemDescription = UILabel()
-    var mapView = UIView()
-    var mView: GMSMapView!
+    fileprivate var itemView = UIView()
+    fileprivate var itemImageView = UIImageView()
+    fileprivate var itemDescription = UILabel()
+    fileprivate var mapView = UIView()
+    fileprivate var mView: GMSMapView!
+    
+    var selectedItem: ItemModel? {
+        willSet {
+            itemDescription.text = newValue?.desc
+            itemImageView.af_setImage(withURL: newValue!.imageUrl)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

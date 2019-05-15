@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import AlamofireImage
+import CoreData
 
 class DataService {
     
@@ -16,10 +17,13 @@ class DataService {
     
     fileprivate let baseUrl = "https://mock-api-mobile.dev.lalamove.com/deliveries"
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    lazy var context = appDelegate.persistentContainer.viewContext
+    
     func fetchData(offset: Int, completionHandler: @escaping ((_ itemArray: [ItemModel]) -> Void)) {
         var itemDetails: [ItemModel] = []
         
-        Alamofire.request(baseUrl, method: .get, parameters: ["offset": offset, "limit": 20], encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
+        Alamofire.request(baseUrl, method: .get, parameters: ["offset": offset, "limit": 20], encoding: JSONEncoding.default, headers: .none).responseJSON { (response) in
             if response.result.value != nil {
                 guard let data = response.result.value! as? [[String: Any]] else { return }
                 
@@ -37,10 +41,37 @@ class DataService {
                     
                     let loc = LocationModel(address: address, lat: latitude, lng: longitude)
                     itemDetails.append(ItemModel(id: id, desc: description, imageUrl: imageUrl, location: loc))
+                    
+                    let item = Item(context: self.context)
+                    item.id = Int32(id)
+                    item.desc = description
+                    item.imageUrl = imageUrl
+                    item.latitude = latitude
+                    item.longitude = longitude
+                    item.address = address
+                    
+                    do {
+                        try self.context.save()
+                        print("Data successfully saved.")
+                    } catch {
+                        print("Could not save: \(error.localizedDescription)")
+                    }
+                    
                     completionHandler(itemDetails)
                 }
-                
             }
+        }
+    }
+    
+    func fetchLocalData(completion: (_ localData: [Item])-> ()) {
+        let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
+        var data = [Item]()
+        do {
+            data = try context.fetch(fetchRequest)
+            completion(data)
+        } catch {
+            print("Could not fetch: \(error.localizedDescription)")
+            completion(data)
         }
     }
 }
