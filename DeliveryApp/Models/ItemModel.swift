@@ -7,10 +7,26 @@
 //
 
 import Foundation
+import ObjectMapper
 
-struct ItemModel {
-    var id: Int
-    var desc: String
-    var imageUrl: URL
-    var location: LocationModel
+class ItemModel: Mappable {
+    var itemId: Int?
+    var desc: String?
+    var imageUrl: String?
+    var location: LocationModel?
+    
+    required init?(map: Map) {
+        //For initialization
+    }
+    
+    init() {
+        
+    }
+    
+    func mapping(map: Map) {
+        itemId <- map["id"]
+        desc <- map["description"]
+        imageUrl <- map["imageUrl"]
+        location <- map["location"]
+    }
 }

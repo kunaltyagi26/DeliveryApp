@@ -15,13 +15,6 @@ class ItemsCell: UITableViewCell {
     fileprivate var itemImageView = UIImageView()
     fileprivate var itemDescription = UILabel()
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        addElements()
-        addConstraints()
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -38,8 +31,10 @@ class ItemsCell: UITableViewCell {
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
-            view.layer.borderWidth = 2.0
+            view.layer.borderWidth = 1.0
             view.layer.borderColor = UIColor.black.cgColor
+            view.layer.cornerRadius = 15
+            view.clipsToBounds = true
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -47,6 +42,8 @@ class ItemsCell: UITableViewCell {
         itemImageView = {
             let imageView = UIImageView()
             imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
             return imageView
         }()
         
@@ -54,6 +51,8 @@ class ItemsCell: UITableViewCell {
             let label = UILabel()
             label.font = UIFont(name: "Helvetica Neue", size: 22)
             label.text = "Sample Description."
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
@@ -66,25 +65,29 @@ class ItemsCell: UITableViewCell {
     func addConstraints() {
         
         itemView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         itemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
         
         itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor).isActive = true
         itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
+        //itemImageView.centerXAnchor.constraint(equalTo: itemView.centerXAnchor, constant: -100).isActive = true
+        //itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
         itemImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        itemImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
         
-        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
-        itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor).isActive = true
-        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
-        itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor).isActive = true
+        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor, constant: 16).isActive = true
+        itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
+        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -16).isActive = true
+        itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: -16).isActive = true
         
     }
     
     func update(itemModel: ItemModel) {
         self.itemDescription.text = itemModel.desc
-        self.itemImageView.af_setImage(withURL: itemModel.imageUrl)
+        //self.itemDescription.text = "This is a very long text. I coould not believe, I will be able to write up this much amount of text."
+        self.itemImageView.af_setImage(withURL: URL(string: itemModel.imageUrl ?? "")!)
     }
-
+    
 }

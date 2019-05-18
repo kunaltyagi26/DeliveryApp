@@ -1,6 +1,9 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
+# ignore all warnings from all dependencies
+inhibit_all_warnings!
+
 target 'DeliveryApp' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
@@ -10,6 +13,10 @@ target 'DeliveryApp' do
   pod 'Alamofire'
   pod 'AlamofireImage'
   pod 'GoogleMaps'
+  pod 'ObjectMapper', '~> 3.4'
+  pod 'Firebase/Core'
+  pod 'Fabric', '~> 1.10.0'
+  pod 'Crashlytics', '~> 3.13.0'
 
   target 'DeliveryAppTests' do
     inherit! :search_paths
