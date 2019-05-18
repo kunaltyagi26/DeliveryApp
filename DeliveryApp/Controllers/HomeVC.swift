@@ -220,7 +220,6 @@ class HomeVC: UIViewController {
         checkData(offset: 0, isAppended: false) { completed in
             if completed {
                 self.deliveryTableView.reloadData()
-                self.showActivityIndicator()
                 self.refreshControl.endRefreshing()
             }
         }
@@ -283,14 +282,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             deliveryTableView.tableFooterView?.isHidden = false
             
             print("Items count before loading more data:", itemsArray.count)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.checkData(offset: self.itemsArray.count, isAppended: true) { completed in
-                    if completed {
-                        print("Items count after loading more data:", self.itemsArray.count)
-                        self.fetchingMore = false
-                        self.deliveryTableView.tableFooterView = UIView()
-                        self.deliveryTableView.tableFooterView?.isHidden = true
-                    }
+            self.checkData(offset: self.itemsArray.count, isAppended: true) { completed in
+                if completed {
+                    print("Items count after loading more data:", self.itemsArray.count)
+                    self.fetchingMore = false
+                    self.deliveryTableView.tableFooterView = UIView()
+                    self.deliveryTableView.tableFooterView?.isHidden = true
                 }
             }
         }
