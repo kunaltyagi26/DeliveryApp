@@ -16,6 +16,8 @@ class HomeVC: UIViewController {
     fileprivate var refreshControl = UIRefreshControl()
     fileprivate var fetchingMore = false
     fileprivate var isAppended = false
+    
+    // MARK: Constants
     fileprivate let cellIdentifier = "itemsCell"
     fileprivate let titleName = "Things to Deliver"
     fileprivate let pullToRefreshString = "Pull to refresh"
@@ -25,6 +27,8 @@ class HomeVC: UIViewController {
     fileprivate let internetErrorMessage = "Check your internet connection."
     fileprivate let entityName = "Item"
     fileprivate let initialOffset = 0
+    fileprivate let numberOfRows = 1
+    fileprivate let cellSpacing: CGFloat = 8
 
     var container: UIView!
     var loadingView: UIView!
@@ -51,23 +55,34 @@ class HomeVC: UIViewController {
         checkData(offset: 0, isAppended: false) { _ in }
     }
     
-    func convertToModel(coreModel: Item, completion: (_ localData: ItemModel) -> Void) {
-        let itemModel =  ItemModel()
+    // MARK: Add Elements
+    func addElements() {
+        deliveryTableView = {
+            let tableView = UITableView()
+            tableView.separatorStyle = .none
+            
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+            return tableView
+        }()
         
-        itemModel.itemId = Int(coreModel.id)
-        itemModel.desc = coreModel.desc
-        itemModel.imageUrl = coreModel.imageUrl
+        refreshControl.attributedTitle = NSAttributedString(string: pullToRefreshString)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        deliveryTableView.refreshControl = refreshControl
         
-        let location = LocationModel(address: coreModel.address ?? "", lat: coreModel.latitude, lng: coreModel.longitude)
-        itemModel.location = location
-        
-        completion(itemModel)
+        view.addSubview(deliveryTableView)
     }
     
+    func addConstraints() {
+        deliveryTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        deliveryTableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        deliveryTableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        deliveryTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    // MARK: Check for data
     func checkData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
         CoreDataService.instance.fetchLocalData(offset: offset) { (_, localData)  in
             if localData.isEmpty {
-                print("Fetching from API.")
                 getApiData(offset: offset, isAppended: isAppended) { completed in
                     if completed {
                         completion(true)
@@ -76,7 +91,6 @@ class HomeVC: UIViewController {
                     }
                 }
             } else {
-                print("Fetching from local data.")
                 getLocalData(localData: localData, isAppended: isAppended) { completed in
                     if completed {
                         completion(true)
@@ -102,7 +116,6 @@ class HomeVC: UIViewController {
                 } else {
                     self.itemsArray = items
                 }
-                print("Items count after fetching data:", self.itemsArray.count)
                 self.deliveryTableView.reloadData()
                 CoreDataService.instance.saveLocalData(item: items)
                 self.stopActivityIndicator()
@@ -132,10 +145,63 @@ class HomeVC: UIViewController {
         completion(true)
     }
     
-    func showAlert(alertTitle: String, alertMessage: String) {
-        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    // MARK: Convert core data model to simple model
+    func convertToModel(coreModel: Item, completion: (_ localData: ItemModel) -> Void) {
+        let itemModel =  ItemModel()
+        
+        itemModel.itemId = Int(coreModel.id)
+        itemModel.desc = coreModel.desc
+        itemModel.imageUrl = coreModel.imageUrl
+        
+        let location = LocationModel(address: coreModel.address ?? "", lat: coreModel.latitude, lng: coreModel.longitude)
+        itemModel.location = location
+        
+        completion(itemModel)
+    }
+    
+    // MARK: Pull to refresh
+    @objc func refresh() {
+        CoreDataService.instance.deleteAllData(entity: entityName)
+        checkData(offset: 0, isAppended: false) { completed in
+            if completed {
+                self.deliveryTableView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+    // MARK: Activity Indicator
+    func addActivityIndicator() {
+        container = UIView()
+        container.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        
+        loadingView = UIView()
+        loadingView.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 10
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        activityIndicator = UIActivityIndicatorView()
+        activityIndicator.style = UIActivityIndicatorView.Style.whiteLarge
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func addActivityIndicatorConstraints() {
+        container.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        container.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        container.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        container.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        loadingView.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
+        loadingView.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true
+        loadingView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        loadingView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        activityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     func showActivityIndicator() {
@@ -158,78 +224,32 @@ class HomeVC: UIViewController {
         container.removeFromSuperview()
     }
     
-    func addElements() {
-        deliveryTableView = {
-            let tableView = UITableView()
-            tableView.separatorStyle = .none
-            
-            tableView.translatesAutoresizingMaskIntoConstraints = false
-            return tableView
-        }()
-        
-        refreshControl.attributedTitle = NSAttributedString(string: pullToRefreshString)
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
-        deliveryTableView.refreshControl = refreshControl
-        
-        view.addSubview(deliveryTableView)
+    // MARK: For showing alerts
+    func showAlert(alertTitle: String, alertMessage: String) {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
-    
-    func addConstraints() {
-        deliveryTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deliveryTableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deliveryTableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        deliveryTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
-    
-    func addActivityIndicator() {
-        container = UIView()
-        container.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
-        container.translatesAutoresizingMaskIntoConstraints = false
-        
-        loadingView = UIView()
-        loadingView.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
-        loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 10
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        
-        activityIndicator = UIActivityIndicatorView()
-        activityIndicator.style = UIActivityIndicatorView.Style.whiteLarge
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-    }
-
-    func addActivityIndicatorConstraints() {
-        container.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        container.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        container.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        container.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        
-        loadingView.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
-        loadingView.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true
-        loadingView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        loadingView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        activityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
-    }
-    
-    @objc func refresh() {
-        CoreDataService.instance.deleteAllData(entity: entityName)
-        checkData(offset: 0, isAppended: false) { completed in
-            if completed {
-                self.deliveryTableView.reloadData()
-                self.refreshControl.endRefreshing()
-            }
-        }
-    }
-
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return itemsArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return numberOfRows
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return cellSpacing
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.clear
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -243,14 +263,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.clipsToBounds = true
         
         cell.selectionStyle = .none
-        cell.update(itemModel: itemsArray[indexPath.row])
+        cell.update(itemModel: itemsArray[indexPath.section])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = ItemDetailsVC()
     
-        detailVC.getDetails(item: itemsArray[indexPath.row])
+        detailVC.getDetails(item: itemsArray[indexPath.section])
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -258,37 +278,44 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         return UITableView.automaticDimension
     }
     
+    // MARK: Pagination
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         let height = scrollView.frame.size.height
         let contentYoffset = scrollView.contentOffset.y
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height && !fetchingMore {
             fetchingMore = true
-            let footerView = UIView()
-            footerView.translatesAutoresizingMaskIntoConstraints = true
-            footerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        
+            addFooterViewWithConstraints()
             
-            let spinner = UIActivityIndicatorView(style: .whiteLarge)
-            spinner.color = .black
-            spinner.startAnimating()
-            footerView.addSubview(spinner)
-            spinner.translatesAutoresizingMaskIntoConstraints = false
-            spinner.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
-            spinner.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
-            spinner.heightAnchor.constraint(equalToConstant: 90).isActive = true
-            spinner.widthAnchor.constraint(equalTo: footerView.widthAnchor).isActive = true
-            deliveryTableView.tableFooterView = footerView
-            deliveryTableView.tableFooterView?.isHidden = false
-            
-            print("Items count before loading more data:", itemsArray.count)
             self.checkData(offset: self.itemsArray.count, isAppended: true) { completed in
                 if completed {
-                    print("Items count after loading more data:", self.itemsArray.count)
                     self.fetchingMore = false
                     self.deliveryTableView.tableFooterView = UIView()
                     self.deliveryTableView.tableFooterView?.isHidden = true
                 }
             }
         }
+    }
+    
+    // MARK: Footer view of cell
+    func addFooterViewWithConstraints() {
+        let footerView = UIView()
+        footerView.translatesAutoresizingMaskIntoConstraints = true
+        footerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        
+        let spinner = UIActivityIndicatorView(style: .whiteLarge)
+        spinner.color = .black
+        spinner.startAnimating()
+        footerView.addSubview(spinner)
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
+        spinner.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        spinner.widthAnchor.constraint(equalTo: footerView.widthAnchor).isActive = true
+        
+        deliveryTableView.tableFooterView = footerView
+        deliveryTableView.tableFooterView?.isHidden = false
     }
 }
