@@ -216,7 +216,6 @@ class HomeVC: UIViewController {
     
     @objc func refresh() {
         CoreDataService.instance.deleteAllData(entity: entityName)
-        //itemsArray = []
         checkData(offset: 0, isAppended: false) { completed in
             if completed {
                 self.deliveryTableView.reloadData()
