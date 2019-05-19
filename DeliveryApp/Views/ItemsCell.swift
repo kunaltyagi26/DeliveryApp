@@ -68,14 +68,12 @@ class ItemsCell: UITableViewCell {
         itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         itemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
+        itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
         
-        itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
-        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor).isActive = true
-        itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
-        //itemImageView.centerXAnchor.constraint(equalTo: itemView.centerXAnchor, constant: -100).isActive = true
-        //itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
+        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: 16).isActive = true
+        itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
         itemImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        itemImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+        itemImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
         itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor, constant: 16).isActive = true
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
@@ -86,7 +84,6 @@ class ItemsCell: UITableViewCell {
     
     func update(itemModel: ItemModel) {
         self.itemDescription.text = itemModel.desc
-        //self.itemDescription.text = "This is a very long text. I coould not believe, I will be able to write up this much amount of text."
         self.itemImageView.af_setImage(withURL: URL(string: itemModel.imageUrl ?? "")!)
     }
     

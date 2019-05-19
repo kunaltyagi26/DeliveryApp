@@ -89,21 +89,22 @@ class ItemDetailsVC: UIViewController {
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        mapView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.85).isActive = true
+        mapView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.85).isActive = true
         
         itemView.topAnchor.constraint(equalTo: mapView.bottomAnchor).isActive = true
         itemView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
-        itemView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         itemView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
+        itemView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
         
-        itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
-        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor).isActive = true
-        itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
+        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: 16).isActive = true
+        itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
         itemImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        itemImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
-        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor).isActive = true
+        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor, constant: 16).isActive = true
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
-        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor).isActive = true
+        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -16).isActive = true
         itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: -16).isActive = true
         
     }
