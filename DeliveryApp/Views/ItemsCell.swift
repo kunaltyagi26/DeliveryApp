@@ -11,10 +11,16 @@ import AlamofireImage
 
 class ItemsCell: UITableViewCell {
 
+    // MARK: Variables
     fileprivate var itemView = UIView()
     fileprivate var itemImageView = UIImageView()
     fileprivate var itemDescription = UILabel()
     
+    // MARK: Constants
+    fileprivate let descFontFamily = "Helvetica Neue"
+    fileprivate let descFontSize: CGFloat = 22
+    
+    // MARK: Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -26,8 +32,8 @@ class ItemsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Add elements
     func addElements() {
-        
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
@@ -49,8 +55,7 @@ class ItemsCell: UITableViewCell {
         
         itemDescription = {
             let label = UILabel()
-            label.font = UIFont(name: "Helvetica Neue", size: 22)
-            label.text = "Sample Description."
+            label.font = UIFont(name: descFontFamily, size: descFontSize)
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +68,6 @@ class ItemsCell: UITableViewCell {
     }
     
     func addConstraints() {
-        
         itemView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         itemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
@@ -79,9 +83,9 @@ class ItemsCell: UITableViewCell {
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
         itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -16).isActive = true
         itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: -16).isActive = true
-        
     }
     
+    // MARK: Update value of items
     func update(itemModel: ItemModel) {
         self.itemDescription.text = itemModel.desc
         self.itemImageView.af_setImage(withURL: URL(string: itemModel.imageUrl ?? "")!)

@@ -21,7 +21,7 @@
 		0C2637BF228D355E001505AA /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637BE228D355E001505AA /* CoreDataService.swift */; };
 		0C2637C1228D485E001505AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0C2637C0228D485E001505AA /* GoogleService-Info.plist */; };
 		0C2637C6228D5BCA001505AA /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 0C2637C5228D5BCA001505AA /* .swiftlint.yml */; };
-		0C2637CC228DC858001505AA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637CB228DC858001505AA /* Theme.swift */; };
+		0C2637CC228DC858001505AA /* NavigationBarTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637CB228DC858001505AA /* NavigationBarTheme.swift */; };
 		0C2637CE228E8AB3001505AA /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637CD228E8AB3001505AA /* Connectivity.swift */; };
 		A2AE1CA0131DDA852060E5AB /* Pods_DeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */; };
 		B5CDCA276E26237600F42DB8 /* Pods_DeliveryAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00A5BA1A24F738407E96F3BB /* Pods_DeliveryAppTests.framework */; };
@@ -57,7 +57,7 @@
 		0C2637BE228D355E001505AA /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		0C2637C0228D485E001505AA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0C2637C5228D5BCA001505AA /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
-		0C2637CB228DC858001505AA /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0C2637CB228DC858001505AA /* NavigationBarTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTheme.swift; sourceTree = "<group>"; };
 		0C2637CD228E8AB3001505AA /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		590CD1430912CD72F1E85736 /* Pods-DeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeliveryApp.debug.xcconfig"; path = "Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -196,7 +196,7 @@
 		0C2637CA228DC7A2001505AA /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				0C2637CB228DC858001505AA /* Theme.swift */,
+				0C2637CB228DC858001505AA /* NavigationBarTheme.swift */,
 				0C2637CD228E8AB3001505AA /* Connectivity.swift */,
 			);
 			path = Helper;
@@ -454,7 +454,7 @@
 				0C263789228AC513001505AA /* AppDelegate.swift in Sources */,
 				0C2637B9228B4029001505AA /* ItemModel.swift in Sources */,
 				0C2637CE228E8AB3001505AA /* Connectivity.swift in Sources */,
-				0C2637CC228DC858001505AA /* Theme.swift in Sources */,
+				0C2637CC228DC858001505AA /* NavigationBarTheme.swift in Sources */,
 				0C2637BF228D355E001505AA /* CoreDataService.swift in Sources */,
 				0C2637B0228AD126001505AA /* DataService.swift in Sources */,
 			);

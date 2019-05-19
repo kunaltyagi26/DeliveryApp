@@ -20,7 +20,7 @@ class ItemModel: Mappable {
     }
     
     init() {
-        
+        //For initialization
     }
     
     func mapping(map: Map) {

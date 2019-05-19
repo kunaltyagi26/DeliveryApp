@@ -29,7 +29,7 @@ import Firebase
             window.makeKeyAndVisible()
         }
         
-        Theme.instance.changeFont()
+        NavigationBarTheme.instance.changeFont()
         
         GMSServices.provideAPIKey(apiKey)
         FirebaseApp.configure()

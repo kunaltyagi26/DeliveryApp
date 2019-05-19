@@ -12,19 +12,20 @@ import AlamofireImage
 
 class ItemDetailsVC: UIViewController {
 
+    // MARK: Variables
     fileprivate var itemView = UIView()
     fileprivate var itemImageView = UIImageView()
     fileprivate var itemDescription = UILabel()
     fileprivate var mapView = GMSMapView()
     fileprivate var mView: GMSMapView!
+    var selectedItem: ItemModel = ItemModel()
+    
+    // MARK: Constants
     fileprivate let titleName = "Delivery Details"
+    fileprivate let descFontFamily = "Helvetica Neue"
+    fileprivate let descFontSize: CGFloat = 22
     
-    var imageUrl: String?
-    var desc: String?
-    var latitude: Double?
-    var longitude: Double?
-    var selectedItem: ItemModel?
-    
+    // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,8 +35,10 @@ class ItemDetailsVC: UIViewController {
         self.title = titleName
         
         setupMap()
+        updateItemDetails()
     }
     
+    // MARK: Add elements
     func addElements() {
         
         mapView = {
@@ -65,8 +68,7 @@ class ItemDetailsVC: UIViewController {
         
         itemDescription = {
             let label = UILabel()
-            label.font = UIFont(name: "Helvetica Neue", size: 22)
-            label.text = "Sample Description."
+            label.font = UIFont(name: descFontFamily, size: descFontSize)
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -79,13 +81,9 @@ class ItemDetailsVC: UIViewController {
         itemView.addSubview(itemDescription)
         view.addSubview(mapView)
         view.addSubview(itemView)
-        
-        self.itemImageView.af_setImage(withURL: URL(string: imageUrl ?? "")!)
-        self.itemDescription.text = desc!
     }
     
     func addConstraints() {
-        
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -106,26 +104,30 @@ class ItemDetailsVC: UIViewController {
         itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
         itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -16).isActive = true
         itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: -16).isActive = true
-        
     }
     
+    // MARK: Fetching details of item
+    func getDetails(item: ItemModel) {
+        selectedItem.imageUrl = item.imageUrl
+        selectedItem.desc = item.desc
+        let location = LocationModel(address: item.location?.address ?? "", lat: item.location?.lat ?? 0.0, lng: item.location?.lng ?? 0.0)
+        selectedItem.location = location
+    }
+    
+    // MARK: Setting up map
     func setupMap() {
-        view.addSubview(mapView)
-        
-        let camera = GMSCameraPosition.camera(withLatitude: latitude ?? 0.0, longitude: longitude ?? 0.0, zoom: 15.0)
+        let camera = GMSCameraPosition.camera(withLatitude: selectedItem.location?.lat ?? 0.0 , longitude: selectedItem.location?.lng ?? 0.0, zoom: 15.0)
         mapView.camera = camera
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0)
+        marker.position = CLLocationCoordinate2D(latitude: selectedItem.location?.lat ?? 0.0, longitude: selectedItem.location?.lng ?? 0.0)
         marker.map = mapView
         
     }
     
-    func getDetails(item: ItemModel) {
-        self.imageUrl = item.imageUrl
-        self.desc = item.desc
-        self.latitude = item.location?.lat
-        self.longitude = item.location?.lng
+    // MARK: Update value of item
+    func updateItemDetails() {
+        self.itemImageView.af_setImage(withURL: URL(string: selectedItem.imageUrl ?? "")!)
+        self.itemDescription.text = selectedItem.desc
     }
-    
 }

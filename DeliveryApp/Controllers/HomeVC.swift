@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeVC.swift
 //  DeliveryApp
 //
 //  Created by Kunal on 14/05/19.
@@ -16,6 +16,9 @@ class HomeVC: UIViewController {
     fileprivate var refreshControl = UIRefreshControl()
     fileprivate var fetchingMore = false
     fileprivate var isAppended = false
+    var container: UIView!
+    var loadingView: UIView!
+    var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Constants
     fileprivate let cellIdentifier = "itemsCell"
@@ -29,12 +32,8 @@ class HomeVC: UIViewController {
     fileprivate let initialOffset = 0
     fileprivate let numberOfRows = 1
     fileprivate let cellSpacing: CGFloat = 8
-
-    var container: UIView!
-    var loadingView: UIView!
-    var activityIndicator: UIActivityIndicatorView!
     
-     // MARK: View lifecycle
+    // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -55,7 +54,7 @@ class HomeVC: UIViewController {
         checkData(offset: 0, isAppended: false) { _ in }
     }
     
-    // MARK: Add Elements
+    // MARK: Add elements
     func addElements() {
         deliveryTableView = {
             let tableView = UITableView()
