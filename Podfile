@@ -10,11 +10,11 @@ target 'DeliveryApp' do
 
   # Pods for DeliveryApp
 
-  pod 'Alamofire'
-  pod 'AlamofireImage'
-  pod 'GoogleMaps'
+  pod 'Alamofire', '~> 4.8.2'
+  pod 'AlamofireImage', '~> 3.5.2'
+  pod 'GoogleMaps', '~> 3.1.0'
   pod 'ObjectMapper', '~> 3.4'
-  pod 'Firebase/Core'
+  pod 'Firebase/Core', '~> 6.0.0'
   pod 'Fabric', '~> 1.10.0'
   pod 'Crashlytics', '~> 3.13.0'
 
