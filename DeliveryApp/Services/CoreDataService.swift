@@ -16,7 +16,7 @@ class CoreDataService {
     fileprivate let entityName = "Item"
     fileprivate let limit = 20
     
-    func saveLocalData(item: [ItemModel]) {
+    func saveLocalData(item: [ItemModel], completionHandler: ((_ error: String?) -> Void)) {
         for itemModel in item {
             let item = Item(context: self.context!)
             guard let itemId = itemModel.itemId else { return }
@@ -29,33 +29,34 @@ class CoreDataService {
             
             do {
                 try self.context?.save()
+                completionHandler(nil)
             } catch {
-                //print("Could not save: \(error.localizedDescription)")
+                completionHandler(error.localizedDescription)
             }
         }
     }
     
-    func fetchLocalData(offset: Int, completion: (_ isResponse: Bool, _ localData: [Item]) -> Void) {
+    func fetchLocalData(offset: Int, completion: (_ error: String?, _ localData: [Item]) -> Void) {
         let fetchRequest = NSFetchRequest<Item>(entityName: entityName)
         fetchRequest.fetchOffset = offset
         fetchRequest.fetchLimit = limit
         var data = [Item]()
         do {
             data = try context?.fetch(fetchRequest) ?? []
-            completion(true, data)
+            completion(nil, data)
         } catch {
-            //print("Could not fetch: \(error.localizedDescription)")
-            completion(false, data)
+            completion(error.localizedDescription, data)
         }
     }
     
-    func deleteAllData(entity: String) {
+    func deleteAllData(entity: String, completionHandler: ((_ error: String?) -> Void)) {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         do {
             try context?.execute(batchDeleteRequest)
+            completionHandler(nil)
         } catch {
-            //print(error.localizedDescription)
+            completionHandler(error.localizedDescription)
         }
     }
 }

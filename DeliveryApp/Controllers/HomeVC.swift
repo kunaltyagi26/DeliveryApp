@@ -9,8 +9,9 @@
 import UIKit
 
 class HomeVC: UIViewController {
+    
     // MARK: Variables
-    fileprivate var deliveryTableView = UITableView()
+    var deliveryTableView = UITableView()
     fileprivate var itemsArray: [ItemModel] = []
     fileprivate var selectedItem: ItemModel?
     fileprivate var refreshControl = UIRefreshControl()
@@ -19,13 +20,13 @@ class HomeVC: UIViewController {
     var container: UIView!
     var loadingView: UIView!
     var activityIndicator: UIActivityIndicatorView!
+    var footerSpinner = UIActivityIndicatorView(style: .whiteLarge)
     
     // MARK: Constants
     fileprivate let cellIdentifier = "itemsCell"
     fileprivate let titleName = "Things to Deliver"
     fileprivate let pullToRefreshString = "Pull to refresh"
     fileprivate let dataErrorTitle = "Data Error"
-    fileprivate let dataErrorMessage = "Unable to fetch data."
     fileprivate let internetErrorTitle = "No Internet"
     fileprivate let internetErrorMessage = "Check your internet connection."
     fileprivate let entityName = "Item"
@@ -80,23 +81,28 @@ class HomeVC: UIViewController {
     
     // MARK: Check for data
     func checkData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
-        CoreDataService.instance.fetchLocalData(offset: offset) { (_, localData)  in
-            if localData.isEmpty {
-                getApiData(offset: offset, isAppended: isAppended) { completed in
-                    if completed {
-                        completion(true)
-                    } else {
-                        completion(false)
+        CoreDataService.instance.fetchLocalData(offset: offset) { (errorMsg, localData) in
+            if errorMsg == nil {
+                if localData.isEmpty {
+                    getApiData(offset: offset, isAppended: isAppended) { completed in
+                        if completed {
+                            completion(true)
+                        } else {
+                            completion(false)
+                        }
+                    }
+                } else {
+                    getLocalData(localData: localData, isAppended: isAppended) { completed in
+                        if completed {
+                            completion(true)
+                        } else {
+                            completion(false)
+                        }
                     }
                 }
             } else {
-                getLocalData(localData: localData, isAppended: isAppended) { completed in
-                    if completed {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                }
+                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                completion(false)
             }
         }
     }
@@ -104,25 +110,37 @@ class HomeVC: UIViewController {
     func getApiData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
         guard Connectivity.isConnectedToInternet else {
             self.stopActivityIndicator()
+            self.footerSpinner.stopAnimating()
+            self.deliveryTableView.tableFooterView?.isHidden = true
             self.showAlert(alertTitle: internetErrorTitle, alertMessage: internetErrorMessage)
             return
         }
         
-        DataService.instance.fetchData(offset: offset) { (res, items)  in
-            if res {
+        DataService.instance.fetchData(offset: offset) { (completed, error, items)   in
+            if completed {
                 if isAppended {
                     self.itemsArray.append(contentsOf: items)
                 } else {
                     self.itemsArray = items
                 }
                 self.deliveryTableView.reloadData()
-                CoreDataService.instance.saveLocalData(item: items)
+                CoreDataService.instance.saveLocalData(item: items) { errorMsg in
+                    if errorMsg == nil {
+                        completion(true)
+                    } else {
+                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                        completion(false)
+                    }
+                }
                 self.stopActivityIndicator()
-                completion(true)
+                self.footerSpinner.stopAnimating()
+                self.deliveryTableView.tableFooterView?.isHidden = true
             } else {
                 self.stopActivityIndicator()
-                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: self.dataErrorMessage)
-                completion(true)
+                self.footerSpinner.stopAnimating()
+                self.deliveryTableView.tableFooterView?.isHidden = true
+                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: error ?? "")
+                completion(false)
             }
         }
     }
@@ -141,6 +159,8 @@ class HomeVC: UIViewController {
         }
         self.deliveryTableView.reloadData()
         self.stopActivityIndicator()
+        self.footerSpinner.stopAnimating()
+        self.deliveryTableView.tableFooterView?.isHidden = true
         completion(true)
     }
     
@@ -160,11 +180,17 @@ class HomeVC: UIViewController {
     
     // MARK: Pull to refresh
     @objc func refresh() {
-        CoreDataService.instance.deleteAllData(entity: entityName)
-        checkData(offset: 0, isAppended: false) { completed in
-            if completed {
-                self.deliveryTableView.reloadData()
+        CoreDataService.instance.deleteAllData(entity: entityName) { errorMsg in
+            if errorMsg == nil {
+                checkData(offset: 0, isAppended: false) { completed in
+                    if completed {
+                        self.deliveryTableView.reloadData()
+                        self.refreshControl.endRefreshing()
+                    }
+                }
+            } else {
                 self.refreshControl.endRefreshing()
+                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
             }
         }
     }
@@ -256,8 +282,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        //cell.layer.borderWidth = CGFloat(8)
-        //cell.layer.borderColor = tableView.backgroundColor?.cgColor
         cell.layer.cornerRadius = 15
         cell.clipsToBounds = true
         
@@ -284,37 +308,25 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height && !fetchingMore {
             fetchingMore = true
-        
-            addFooterViewWithConstraints()
+            
+            footerSpinner.color = .black
+            footerSpinner.startAnimating()
+            footerSpinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: deliveryTableView.bounds.width, height: CGFloat(44))
+            
+            deliveryTableView.tableFooterView = footerSpinner
+            deliveryTableView.tableFooterView?.isHidden = false
             
             self.checkData(offset: self.itemsArray.count, isAppended: true) { completed in
                 if completed {
                     self.fetchingMore = false
-                    self.deliveryTableView.tableFooterView = UIView()
+                    self.footerSpinner.stopAnimating()
+                    self.deliveryTableView.tableFooterView?.isHidden = true
+                } else {
+                    self.fetchingMore = false
+                    self.footerSpinner.stopAnimating()
                     self.deliveryTableView.tableFooterView?.isHidden = true
                 }
             }
         }
-    }
-    
-    // MARK: Footer view of cell
-    func addFooterViewWithConstraints() {
-        let footerView = UIView()
-        footerView.translatesAutoresizingMaskIntoConstraints = true
-        footerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
-        let spinner = UIActivityIndicatorView(style: .whiteLarge)
-        spinner.color = .black
-        spinner.startAnimating()
-        footerView.addSubview(spinner)
-        
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: footerView.centerYAnchor).isActive = true
-        spinner.heightAnchor.constraint(equalToConstant: 90).isActive = true
-        spinner.widthAnchor.constraint(equalTo: footerView.widthAnchor).isActive = true
-        
-        deliveryTableView.tableFooterView = footerView
-        deliveryTableView.tableFooterView?.isHidden = false
     }
 }

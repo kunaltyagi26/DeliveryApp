@@ -116,7 +116,7 @@ class ItemDetailsVC: UIViewController {
     
     // MARK: Setting up map
     func setupMap() {
-        let camera = GMSCameraPosition.camera(withLatitude: selectedItem.location?.lat ?? 0.0 , longitude: selectedItem.location?.lng ?? 0.0, zoom: 15.0)
+        let camera = GMSCameraPosition.camera(withLatitude: selectedItem.location?.lat ?? 0.0, longitude: selectedItem.location?.lng ?? 0.0, zoom: 15.0)
         mapView.camera = camera
         
         let marker = GMSMarker()

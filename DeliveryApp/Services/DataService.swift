@@ -21,15 +21,16 @@ class DataService {
     fileprivate let offsetKey = "offset"
     fileprivate let limitKey = "limit"
     
-    func fetchData(offset: Int, completionHandler: @escaping ((_ isResponse: Bool, _ itemArray: [ItemModel]) -> Void)) {
+    func fetchData(offset: Int, completionHandler: @escaping ((_ isResponse: Bool, _ error: String?, _ itemArray: [ItemModel]) -> Void)) {
         let parameters: [String: Any] = [offsetKey: offset, limitKey: limit]
         Alamofire.request(baseUrl, method: .get, parameters: parameters).responseJSON { (response) in
             if response.result.value != nil {
                 guard let data = response.result.value! as? [[String: Any]] else { return }
                 let items = Mapper<ItemModel>().mapArray(JSONArray: data)
-                completionHandler(true, items)
+                completionHandler(true, nil, items)
             } else {
-                completionHandler(false, [ItemModel]())
+                let error = response.error?.localizedDescription
+                completionHandler(false, error, [ItemModel]())
             }
         }
     }

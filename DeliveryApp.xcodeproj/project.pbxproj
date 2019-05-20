@@ -23,12 +23,20 @@
 		0C2637C6228D5BCA001505AA /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 0C2637C5228D5BCA001505AA /* .swiftlint.yml */; };
 		0C2637CC228DC858001505AA /* NavigationBarTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637CB228DC858001505AA /* NavigationBarTheme.swift */; };
 		0C2637CE228E8AB3001505AA /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637CD228E8AB3001505AA /* Connectivity.swift */; };
+		0C2637D6229175A9001505AA /* DeliveryAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2637D5229175A9001505AA /* DeliveryAppUITests.swift */; };
 		A2AE1CA0131DDA852060E5AB /* Pods_DeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */; };
 		B5CDCA276E26237600F42DB8 /* Pods_DeliveryAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00A5BA1A24F738407E96F3BB /* Pods_DeliveryAppTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		0C26379D228AC514001505AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0C26377D228AC513001505AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0C263784228AC513001505AA;
+			remoteInfo = DeliveryApp;
+		};
+		0C2637D8229175A9001505AA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0C26377D228AC513001505AA /* Project object */;
 			proxyType = 1;
@@ -59,6 +67,9 @@
 		0C2637C5228D5BCA001505AA /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0C2637CB228DC858001505AA /* NavigationBarTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTheme.swift; sourceTree = "<group>"; };
 		0C2637CD228E8AB3001505AA /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		0C2637D3229175A9001505AA /* DeliveryAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeliveryAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C2637D5229175A9001505AA /* DeliveryAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryAppUITests.swift; sourceTree = "<group>"; };
+		0C2637D7229175A9001505AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14A03E8F2DAE19CDFB6DAFDF /* Pods_DeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		590CD1430912CD72F1E85736 /* Pods-DeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeliveryApp.debug.xcconfig"; path = "Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CEB0E4CC73FABBCAF776EA79 /* Pods-DeliveryApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeliveryApp.release.xcconfig"; path = "Target Support Files/Pods-DeliveryApp/Pods-DeliveryApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -83,6 +94,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C2637D0229175A9001505AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -92,6 +110,7 @@
 				0C2637C5228D5BCA001505AA /* .swiftlint.yml */,
 				0C263787228AC513001505AA /* DeliveryApp */,
 				0C26379F228AC514001505AA /* DeliveryAppTests */,
+				0C2637D4229175A9001505AA /* DeliveryAppUITests */,
 				0C263786228AC513001505AA /* Products */,
 				201802C2F8179577B62904BD /* Pods */,
 				C2E9B19D3150DF886364D498 /* Frameworks */,
@@ -103,6 +122,7 @@
 			children = (
 				0C263785228AC513001505AA /* DeliveryApp.app */,
 				0C26379C228AC514001505AA /* DeliveryAppTests.xctest */,
+				0C2637D3229175A9001505AA /* DeliveryAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -202,6 +222,15 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		0C2637D4229175A9001505AA /* DeliveryAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0C2637D5229175A9001505AA /* DeliveryAppUITests.swift */,
+				0C2637D7229175A9001505AA /* Info.plist */,
+			);
+			path = DeliveryAppUITests;
+			sourceTree = "<group>";
+		};
 		201802C2F8179577B62904BD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,6 +294,24 @@
 			productReference = 0C26379C228AC514001505AA /* DeliveryAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		0C2637D2229175A9001505AA /* DeliveryAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C2637DA229175A9001505AA /* Build configuration list for PBXNativeTarget "DeliveryAppUITests" */;
+			buildPhases = (
+				0C2637CF229175A9001505AA /* Sources */,
+				0C2637D0229175A9001505AA /* Frameworks */,
+				0C2637D1229175A9001505AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C2637D9229175A9001505AA /* PBXTargetDependency */,
+			);
+			name = DeliveryAppUITests;
+			productName = DeliveryAppUITests;
+			productReference = 0C2637D3229175A9001505AA /* DeliveryAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -279,6 +326,10 @@
 						CreatedOnToolsVersion = 10.2.1;
 					};
 					0C26379B228AC514001505AA = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 0C263784228AC513001505AA;
+					};
+					0C2637D2229175A9001505AA = {
 						CreatedOnToolsVersion = 10.2.1;
 						TestTargetID = 0C263784228AC513001505AA;
 					};
@@ -299,6 +350,7 @@
 			targets = (
 				0C263784228AC513001505AA /* DeliveryApp */,
 				0C26379B228AC514001505AA /* DeliveryAppTests */,
+				0C2637D2229175A9001505AA /* DeliveryAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -316,6 +368,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0C26379A228AC514001505AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C2637D1229175A9001505AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -468,6 +527,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0C2637CF229175A9001505AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C2637D6229175A9001505AA /* DeliveryAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -475,6 +542,11 @@
 			isa = PBXTargetDependency;
 			target = 0C263784228AC513001505AA /* DeliveryApp */;
 			targetProxy = 0C26379D228AC514001505AA /* PBXContainerItemProxy */;
+		};
+		0C2637D9229175A9001505AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C263784228AC513001505AA /* DeliveryApp */;
+			targetProxy = 0C2637D8229175A9001505AA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -524,7 +596,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -684,6 +756,42 @@
 			};
 			name = Release;
 		};
+		0C2637DB229175A9001505AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DeliveryAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kunal.DeliveryAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DeliveryApp;
+			};
+			name = Debug;
+		};
+		0C2637DC229175A9001505AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DeliveryAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kunal.DeliveryAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DeliveryApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -710,6 +818,15 @@
 			buildConfigurations = (
 				0C2637A9228AC514001505AA /* Debug */,
 				0C2637AA228AC514001505AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C2637DA229175A9001505AA /* Build configuration list for PBXNativeTarget "DeliveryAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C2637DB229175A9001505AA /* Debug */,
+				0C2637DC229175A9001505AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
