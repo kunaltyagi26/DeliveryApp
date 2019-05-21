@@ -35,6 +35,14 @@ To run the project :
 1. Core Data is used for storing/caching app data.
 2. AlamofireImage is used for caching images.
 
+# Generating key for Google Maps
+1. Go to the Google Cloud Platform Console(https://console.cloud.google.com/flows/enableapi?apiid=maps_ios_backend&reusekey=true).
+2. Create or select a project.
+3. Click Continue to enable the Maps SDK for iOS.
+4. On the Credentials page, get an API key. 
+5. Click Save.
+6. In the project, open Shared/Constants.swift file and assign the respective API key to the constant "apiKey".
+
 # Assumptions        
 1. The app is designed for iPhones and with portrait mode.      
 2.  Supported mobile platforms are iOS (11.x, 12.x)        
