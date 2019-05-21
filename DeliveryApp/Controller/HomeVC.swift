@@ -143,19 +143,19 @@ class HomeVC: UIViewController {
     
     // MARK: Pull to refresh
     @objc func pullToRefresh() {
-        fetchData(offset: initialOffset, isAppended: false) { completed in
-            if completed {
-                self.coreDataService.deleteAllData(entity: Constants.instance.entityName) { (errorMsg) in
-                    if errorMsg == nil {
+        self.coreDataService.deleteAllData(entity: Constants.instance.entityName) { (errorMsg) in
+            if errorMsg == nil {
+                self.fetchData(offset: initialOffset, isAppended: false) { completed in
+                    if completed {
                         self.deliveryTableView.reloadData()
                         self.completingRefresh()
                     } else {
                         self.completingRefresh()
-                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
                     }
                 }
             } else {
                 self.completingRefresh()
+                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
             }
         }
     }
