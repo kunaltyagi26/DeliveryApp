@@ -2,8 +2,8 @@
 //  APIManagerTests.swift
 //  AssignmentTests
 //
-//  Created by Kanika on 16/05/19.
-//  Copyright © 2019 Kanika. All rights reserved.
+//  Created by Kunal on 16/05/19.
+//  Copyright © 2019 Kunal. All rights reserved.
 //
 
 import XCTest
