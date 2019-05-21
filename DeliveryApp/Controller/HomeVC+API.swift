@@ -19,7 +19,7 @@ extension HomeVC {
         }
     }
     
-    func fetchingAPIData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
+    func fetchingAPIData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool, _ errorMsg: String?, _ items: [ItemModel]?) -> Void)) {
         guard Connectivity.isConnectedToInternet else {
             stopLoader()
             self.showAlert(alertTitle: internetErrorTitle, alertMessage: internetErrorMessage)
@@ -28,25 +28,9 @@ extension HomeVC {
         
         getApiData(offset: offset) { completed, errorMsg, items in
             if completed {
-                if isAppended {
-                    self.deliveryItems.append(contentsOf: items ?? [ItemModel]())
-                } else {
-                    self.deliveryItems = items ?? [ItemModel]()
-                }
-                self.deliveryTableView.reloadData()
-                self.saveLocalData(items: items ?? [ItemModel]()) { errorMsg in
-                    if errorMsg == nil {
-                        completion(true)
-                    } else {
-                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
-                        completion(false)
-                    }
-                }
-                self.stopLoader()
+                completion(true, nil, items)
             } else {
-                self.stopLoader()
-                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
-                completion(false)
+                completion(false, errorMsg, nil)
             }
         }
     }

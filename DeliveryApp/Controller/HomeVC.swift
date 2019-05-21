@@ -91,8 +91,28 @@ class HomeVC: UIViewController {
             }
             
             if localData?.isEmpty ?? true {
-                fetchingAPIData(offset: offset, isAppended: isAppended) { (completed) in
-                    completion(completed)
+                fetchingAPIData(offset: offset, isAppended: isAppended) { (_, errorMsg, items) in
+                    guard errorMsg == nil else {
+                        self.errorWhileFetchingData(errorMsg: errorMsg ?? "")
+                        completion(false)
+                        return
+                    }
+                    
+                    if isAppended {
+                        self.deliveryItems.append(contentsOf: items ?? [ItemModel]())
+                    } else {
+                        self.deliveryItems = items ?? [ItemModel]()
+                    }
+                    self.deliveryTableView.reloadData()
+                    self.saveLocalData(items: items ?? [ItemModel]()) { errorMsg in
+                        if errorMsg == nil {
+                            completion(true)
+                        } else {
+                            self.errorWhileFetchingData(errorMsg: errorMsg ?? "")
+                            completion(false)
+                        }
+                    }
+                    self.stopLoader()
                 }
             } else {
                 convertLocalData(localData: localData ?? [Item](), isAppended: isAppended) { completed in
@@ -100,6 +120,11 @@ class HomeVC: UIViewController {
                 }
             }
         }
+    }
+    
+    func errorWhileFetchingData(errorMsg: String) {
+        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg )
+        self.stopActivityIndicator()
     }
     
     // MARK: Convert core data model to simple model
@@ -173,7 +198,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = ItemDetailsVC()
     
-        detailVC.setDetails(item: deliveryItems[indexPath.section])
+        detailVC.setDetails(item: deliveryItems[indexPath.row])
         navigationController?.pushViewController(detailVC, animated: true)
     }
     

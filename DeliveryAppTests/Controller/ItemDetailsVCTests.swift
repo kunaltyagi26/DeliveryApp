@@ -39,9 +39,4 @@ class ItemDetailsVCTests: XCTestCase {
         itemDetailsVC.setDetails(item: itemModel)
         XCTAssertEqual(itemDetailsVC.selectedItem.desc, itemModel.desc)
     }
-    
-    /*func testUpdateDetails() {
-        itemDetailsVC.updateItemDetails()
-        XCTAssertNotNil(itemDetailsVC.description)
-    }*/
 }

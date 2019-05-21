@@ -38,8 +38,6 @@ extension HomeVC {
             })
         }
         
-        //self.deliveryItems.append(contentsOf: itemsData)
-        
         if isAppended {
             self.deliveryItems.append(contentsOf: itemsData)
         } else {
