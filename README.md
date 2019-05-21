@@ -22,6 +22,8 @@ To run the project :
 # Design Pattern
 ## MVC
 
+<img width="537" alt="Screenshot 2019-05-22 at 1 17 11 AM" src="https://user-images.githubusercontent.com/28871881/58125973-5be42280-7c01-11e9-84a6-1bcf8e15f3fd.png">
+
 - Model : Model stores the data from server and local databse. ItemModel is used for holding data of delivery items and LocationModel is used for holding data of location for the delivery items. Model is interacting with the data service layer.
     1. CoreDataService : This class interacts with database i.e CoreData. It performs the all database related operations and responds back to the view controller.
     2. DataService: This class interacts remotely. It retrieves the data from the server and returns back to view controller.
