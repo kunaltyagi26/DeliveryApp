@@ -15,11 +15,10 @@ import Firebase
  class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var navigationController: UINavigationController?
     let apiKey = "AIzaSyBf9CKepAdOD45IJPJZKlWXlIrXYVq8b30"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        let navigationController: UINavigationController?
         window = UIWindow(frame: UIScreen.main.bounds)
         
         if let window = window {

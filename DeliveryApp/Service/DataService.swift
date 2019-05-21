@@ -21,7 +21,7 @@ class DataService {
     fileprivate let offsetKey = "offset"
     fileprivate let limitKey = "limit"
     
-    func fetchData(offset: Int, completionHandler: @escaping ((_ isResponse: Bool, _ error: String?, _ itemArray: [ItemModel]) -> Void)) {
+    func fetchData(offset: Int, completionHandler: @escaping ((_ isResponse: Bool, _ error: String?, _ itemArray: [ItemModel]?) -> Void)) {
         let parameters: [String: Any] = [offsetKey: offset, limitKey: limit]
         Alamofire.request(baseUrl, method: .get, parameters: parameters).responseJSON { (response) in
             if response.result.value != nil {
@@ -30,7 +30,7 @@ class DataService {
                 completionHandler(true, nil, items)
             } else {
                 let error = response.error?.localizedDescription
-                completionHandler(false, error, [ItemModel]())
+                completionHandler(false, error, nil)
             }
         }
     }

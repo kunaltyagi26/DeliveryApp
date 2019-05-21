@@ -10,11 +10,21 @@ import UIKit
 import CoreData
 
 class CoreDataService {
-    static let instance = CoreDataService()
+
     weak var appDelegate = UIApplication.shared.delegate as? AppDelegate
-    lazy var context = appDelegate?.persistentContainer.viewContext
+    var context: NSManagedObjectContext!
     fileprivate let entityName = "Item"
     fileprivate let limit = 20
+    
+    init() {
+        context = appDelegate?.persistentContainer.viewContext
+    }
+    
+    init(container: NSPersistentContainer) {
+        appDelegate?.persistentContainer = container
+        appDelegate?.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        context = container.viewContext
+    }
     
     func saveLocalData(item: [ItemModel], completionHandler: ((_ error: String?) -> Void)) {
         for itemModel in item {

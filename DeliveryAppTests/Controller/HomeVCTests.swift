@@ -1,8 +1,8 @@
 //
-//  DeliveryAppTests.swift
+//  HomeVCTests.swift
 //  DeliveryAppTests
 //
-//  Created by Kunal on 14/05/19.
+//  Created by Kunal on 20/05/19.
 //  Copyright © 2019 Kunal. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import XCTest
 @testable import DeliveryApp
 
 class HomeVCTests: XCTestCase {
-
+    
     var homeVC: HomeVC!
     
     override func setUp() {
@@ -18,9 +18,10 @@ class HomeVCTests: XCTestCase {
         homeVC = HomeVC()
         homeVC.loadViewIfNeeded()
     }
-
+    
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        homeVC = nil
     }
     
     func testControllerHasTableView() {
@@ -49,8 +50,7 @@ class HomeVCTests: XCTestCase {
         XCTAssertTrue(homeVC.conforms(to: UITableViewDataSource.self), "View does not conform to UITableView datasource protocol")
     }
     
-//    func testkjg() {
-//        homeVC.addElements()
-//        XCTAssertNotNil(homeVC.deliveryTableView)
-//    }
+    func testInternetConnection() {
+        XCTAssertEqual(Connectivity.isConnectedToInternet, true, "Application should have a continuous internet connection.")
+    }
 }

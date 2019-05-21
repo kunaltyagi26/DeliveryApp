@@ -35,4 +35,5 @@ class DeliveryAppUITests: XCTestCase {
         let table = XCUIApplication().tables
         XCTAssertEqual(table.cells.count, 20, "There should be 20 rows initially")
     }
+    
 }

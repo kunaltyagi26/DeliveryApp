@@ -17,6 +17,7 @@ target 'DeliveryApp' do
   pod 'Firebase/Core', '~> 6.0.0'
   pod 'Fabric', '~> 1.10.0'
   pod 'Crashlytics', '~> 3.13.0'
+  pod 'OHHTTPStubs/Swift', '~> 7.0.0'
 
   target 'DeliveryAppTests' do
     inherit! :search_paths

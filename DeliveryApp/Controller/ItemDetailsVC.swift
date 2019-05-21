@@ -13,34 +13,33 @@ import AlamofireImage
 class ItemDetailsVC: UIViewController {
 
     // MARK: Variables
-    fileprivate var itemView = UIView()
-    fileprivate var itemImageView = UIImageView()
-    fileprivate var itemDescription = UILabel()
-    fileprivate var mapView = GMSMapView()
-    fileprivate var mView: GMSMapView!
+    var itemView: UIView!
+    var itemImageView: UIImageView!
+    fileprivate var itemDescription: UILabel!
+    var mapView: GMSMapView!
     var selectedItem: ItemModel = ItemModel()
     
     // MARK: Constants
     fileprivate let titleName = "Delivery Details"
     fileprivate let descFontFamily = "Helvetica Neue"
     fileprivate let descFontSize: CGFloat = 22
+    fileprivate let placeholderImageUrl = "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg"
     
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addElements()
+        addElements() 
         addConstraints()
         
         self.title = titleName
         
-        setupMap()
-        updateItemDetails()
+        self.setupMap()
+        self.updateItemDetails()
     }
     
     // MARK: Add elements
     func addElements() {
-        
         mapView = {
             let view = GMSMapView()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +80,7 @@ class ItemDetailsVC: UIViewController {
         itemView.addSubview(itemDescription)
         view.addSubview(mapView)
         view.addSubview(itemView)
+        
     }
     
     func addConstraints() {
@@ -107,11 +107,8 @@ class ItemDetailsVC: UIViewController {
     }
     
     // MARK: Fetching details of item
-    func getDetails(item: ItemModel) {
-        selectedItem.imageUrl = item.imageUrl
-        selectedItem.desc = item.desc
-        let location = LocationModel(address: item.location?.address ?? "", lat: item.location?.lat ?? 0.0, lng: item.location?.lng ?? 0.0)
-        selectedItem.location = location
+    func setDetails(item: ItemModel) {
+        selectedItem = item
     }
     
     // MARK: Setting up map
@@ -127,7 +124,14 @@ class ItemDetailsVC: UIViewController {
     
     // MARK: Update value of item
     func updateItemDetails() {
-        self.itemImageView.af_setImage(withURL: URL(string: selectedItem.imageUrl ?? "")!)
+        var url = ""
+        if let imageUrl = selectedItem.imageUrl {
+            url = imageUrl
+        } else {
+            url = placeholderImageUrl
+        }
+        print(URL(string: placeholderImageUrl)!)
+        self.itemImageView.af_setImage(withURL: URL(string: url)!)
         self.itemDescription.text = selectedItem.desc
     }
 }

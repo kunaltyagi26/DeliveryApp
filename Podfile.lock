@@ -61,15 +61,29 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - ObjectMapper (3.4.2)
+  - OHHTTPStubs/Core (7.0.0)
+  - OHHTTPStubs/Default (7.0.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (7.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (7.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (7.0.0)
+  - OHHTTPStubs/Swift (7.0.0):
+    - OHHTTPStubs/Default
 
 DEPENDENCIES:
-  - Alamofire
-  - AlamofireImage
+  - Alamofire (~> 4.8.2)
+  - AlamofireImage (~> 3.5.2)
   - Crashlytics (~> 3.13.0)
   - Fabric (~> 1.10.0)
-  - Firebase/Core
-  - GoogleMaps
+  - Firebase/Core (~> 6.0.0)
+  - GoogleMaps (~> 3.1.0)
   - ObjectMapper (~> 3.4)
+  - OHHTTPStubs/Swift (~> 7.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -86,6 +100,7 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - ObjectMapper
+    - OHHTTPStubs
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
@@ -101,7 +116,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: f1faafc033ea203adf1783ce00af455bb99d0e5b
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
+  OHHTTPStubs: ef33a2c353110d306bb98f695435ec56ff5a26c3
 
-PODFILE CHECKSUM: ceb417dd08b5541c227e2978d52f93fadb3d7737
+PODFILE CHECKSUM: e517c92dd8c3698b04778d80ba01ea8603c40985
 
 COCOAPODS: 1.6.1

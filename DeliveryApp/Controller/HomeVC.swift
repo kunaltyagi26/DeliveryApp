@@ -11,9 +11,8 @@ import UIKit
 class HomeVC: UIViewController {
     
     // MARK: Variables
-    var deliveryTableView = UITableView()
+    var deliveryTableView: UITableView!
     fileprivate var itemsArray: [ItemModel] = []
-    fileprivate var selectedItem: ItemModel?
     fileprivate var refreshControl = UIRefreshControl()
     fileprivate var fetchingMore = false
     fileprivate var isAppended = false
@@ -21,6 +20,7 @@ class HomeVC: UIViewController {
     var loadingView: UIView!
     var activityIndicator: UIActivityIndicatorView!
     var footerSpinner = UIActivityIndicatorView(style: .whiteLarge)
+    let coreDataServiceObj = CoreDataService()
     
     // MARK: Constants
     fileprivate let cellIdentifier = "itemsCell"
@@ -81,7 +81,8 @@ class HomeVC: UIViewController {
     
     // MARK: Check for data
     func checkData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
-        CoreDataService.instance.fetchLocalData(offset: offset) { (errorMsg, localData) in
+        
+        coreDataServiceObj.fetchLocalData(offset: offset) { (errorMsg, localData) in
             if errorMsg == nil {
                 if localData.isEmpty {
                     getApiData(offset: offset, isAppended: isAppended) { completed in
@@ -119,12 +120,12 @@ class HomeVC: UIViewController {
         DataService.instance.fetchData(offset: offset) { (completed, error, items)   in
             if completed {
                 if isAppended {
-                    self.itemsArray.append(contentsOf: items)
+                    self.itemsArray.append(contentsOf: items ?? [ItemModel]())
                 } else {
-                    self.itemsArray = items
+                    self.itemsArray = items ?? [ItemModel]()
                 }
                 self.deliveryTableView.reloadData()
-                CoreDataService.instance.saveLocalData(item: items) { errorMsg in
+                self.coreDataServiceObj.saveLocalData(item: items ?? [ItemModel]()) { errorMsg in
                     if errorMsg == nil {
                         completion(true)
                     } else {
@@ -180,7 +181,7 @@ class HomeVC: UIViewController {
     
     // MARK: Pull to refresh
     @objc func refresh() {
-        CoreDataService.instance.deleteAllData(entity: entityName) { errorMsg in
+        coreDataServiceObj.deleteAllData(entity: entityName) { errorMsg in
             if errorMsg == nil {
                 checkData(offset: 0, isAppended: false) { completed in
                     if completed {
@@ -293,7 +294,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = ItemDetailsVC()
     
-        detailVC.getDetails(item: itemsArray[indexPath.section])
+        detailVC.setDetails(item: itemsArray[indexPath.section])
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
