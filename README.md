@@ -55,7 +55,7 @@ To run the project :
    - d) If any cached data is deleted from the server then local cache data will not delete.
 6. UI test cases are not considered and not implemented.
 
-# "Firebase Crashlytics"
+# Firebase Crashlytics
 The Firebase Crashlytics is integrated into the project to collect the crash reports. The crash report will be available on the firebase console. 
 To change the firebase account, follow the below steps:
 1. Go to https://console.firebase.google.com/ and create an app
@@ -65,14 +65,14 @@ To change the firebase account, follow the below steps:
 5. Run the app
 6. For more details about the Firebase Crashlytics integration, follow details on this link : https://firebase.google.com/docs/crashlytics/get-started
 
-# "SwiftLint"
+# SwiftLint
 1. Install the SwiftLint is by downloading SwiftLint.pkg from latest GitHub release and running - https://github.com/realm/SwiftLint/releases
 Or by HomeBrew by running "brew install swiftlint" command
 2. Add the run script in the xcode (target -> Build pahse -> run script -> add the script) if not added
 3. If need to change the rules of swiftlint, goto root folder of the project
 4. Open the .swiftlint.yml file and modify the rules based on the requirement
 
-# "Cocoa Pod Used"      
+# Cocoa Pod Used     
 1. Alamofire
 2. AlamofireImage
 3. GoogleMaps
