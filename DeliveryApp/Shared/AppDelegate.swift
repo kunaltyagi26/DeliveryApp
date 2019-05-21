@@ -15,7 +15,6 @@ import Firebase
  class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let apiKey = "AIzaSyBf9CKepAdOD45IJPJZKlWXlIrXYVq8b30"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let navigationController: UINavigationController?
@@ -30,7 +29,7 @@ import Firebase
         
         NavigationBarTheme.instance.changeFont()
         
-        GMSServices.provideAPIKey(apiKey)
+        GMSServices.provideAPIKey(Constants.instance.apiKey)
         FirebaseApp.configure()
         
         return true

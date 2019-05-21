@@ -13,8 +13,6 @@ class CoreDataService {
 
     weak var appDelegate = UIApplication.shared.delegate as? AppDelegate
     var context: NSManagedObjectContext!
-    fileprivate let entityName = "Item"
-    fileprivate let limit = 20
     
     init() {
         context = appDelegate?.persistentContainer.viewContext
@@ -47,9 +45,9 @@ class CoreDataService {
     }
     
     func fetchLocalData(offset: Int, completion: (_ error: String?, _ localData: [Item]) -> Void) {
-        let fetchRequest = NSFetchRequest<Item>(entityName: entityName)
+        let fetchRequest = NSFetchRequest<Item>(entityName: Constants.instance.entityName)
         fetchRequest.fetchOffset = offset
-        fetchRequest.fetchLimit = limit
+        fetchRequest.fetchLimit = Constants.instance.limit
         var data = [Item]()
         do {
             data = try context?.fetch(fetchRequest) ?? []

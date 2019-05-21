@@ -16,10 +16,6 @@ class ItemsCell: UITableViewCell {
     fileprivate var itemImageView = UIImageView()
     fileprivate var itemDescription = UILabel()
     
-    // MARK: Constants
-    fileprivate let descFontFamily = "Helvetica Neue"
-    fileprivate let descFontSize: CGFloat = 22
-    
     // MARK: Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -39,8 +35,6 @@ class ItemsCell: UITableViewCell {
             view.backgroundColor = .white
             view.layer.borderWidth = 1.0
             view.layer.borderColor = UIColor.black.cgColor
-            view.layer.cornerRadius = 15
-            view.clipsToBounds = true
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -55,7 +49,7 @@ class ItemsCell: UITableViewCell {
         
         itemDescription = {
             let label = UILabel()
-            label.font = UIFont(name: descFontFamily, size: descFontSize)
+            label.font = UIFont(name: Constants.instance.fontFamily, size: Constants.instance.fontSize)
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -69,9 +63,9 @@ class ItemsCell: UITableViewCell {
     
     func addConstraints() {
         itemView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
+        itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
         itemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
+        itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
         itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
         
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: 16).isActive = true
@@ -86,9 +80,9 @@ class ItemsCell: UITableViewCell {
     }
     
     // MARK: Update value of items
-    func update(itemModel: ItemModel) {
-        self.itemDescription.text = itemModel.desc
-        self.itemImageView.af_setImage(withURL: URL(string: itemModel.imageUrl ?? "")!)
+    func update(desc: String, imageUrl: String) {
+        self.itemDescription.text = desc
+        self.itemImageView.af_setImage(withURL: URL(string: imageUrl)!)
     }
     
 }

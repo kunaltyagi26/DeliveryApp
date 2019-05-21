@@ -17,7 +17,7 @@ class APIManagerTests: XCTestCase {
         XCStub.request(withPathRegex: host, withResponseFile: "MockItemsData.json")
         let promise = expectation(description: "expected data from the json file")
         
-        DataService.instance.fetchData(offset: 0) { (_, _, items) in
+        APIDataService.instance.fetchData(offset: 0) { (_, _, items) in
             XCTAssertNotNil(items)
             promise.fulfill()
         }
@@ -33,7 +33,7 @@ class APIManagerTests: XCTestCase {
         XCStub.request(withPathRegex: host, withResponseFile: "MockItemsData_Invalid.json")
         let promise = expectation(description: "expected error from the invalid json file")
         
-        DataService.instance.fetchData(offset: 0) { (_, errorMsg, _) in
+        APIDataService.instance.fetchData(offset: 0) { (_, errorMsg, _) in
             XCTAssertNotNil(errorMsg)
             promise.fulfill()
         }

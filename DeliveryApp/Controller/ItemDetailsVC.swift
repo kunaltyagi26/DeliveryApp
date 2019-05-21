@@ -21,8 +21,7 @@ class ItemDetailsVC: UIViewController {
     
     // MARK: Constants
     fileprivate let titleName = "Delivery Details"
-    fileprivate let descFontFamily = "Helvetica Neue"
-    fileprivate let descFontSize: CGFloat = 22
+    fileprivate let zoomLevel: Float = 15.0
     fileprivate let placeholderImageUrl = "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg"
     
     // MARK: View lifecycle
@@ -67,7 +66,7 @@ class ItemDetailsVC: UIViewController {
         
         itemDescription = {
             let label = UILabel()
-            label.font = UIFont(name: descFontFamily, size: descFontSize)
+            label.font = UIFont(name: Constants.instance.fontFamily, size: Constants.instance.fontSize)
             label.numberOfLines = 0
             label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -113,13 +112,13 @@ class ItemDetailsVC: UIViewController {
     
     // MARK: Setting up map
     func setupMap() {
-        let camera = GMSCameraPosition.camera(withLatitude: selectedItem.location?.lat ?? 0.0, longitude: selectedItem.location?.lng ?? 0.0, zoom: 15.0)
+        let camera = GMSCameraPosition.camera(withLatitude: selectedItem.location?.lat ?? 0.0, longitude: selectedItem.location?.lng ?? 0.0, zoom: zoomLevel)
         mapView.camera = camera
         
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2D(latitude: selectedItem.location?.lat ?? 0.0, longitude: selectedItem.location?.lng ?? 0.0)
         marker.map = mapView
-        
+        marker.title = selectedItem.location?.address
     }
     
     // MARK: Update value of item

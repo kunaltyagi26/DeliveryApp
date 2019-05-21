@@ -12,27 +12,29 @@ class HomeVC: UIViewController {
     
     // MARK: Variables
     var deliveryTableView: UITableView!
-    fileprivate var itemsArray: [ItemModel] = []
+    var deliveryItems: [ItemModel] = []
     fileprivate var refreshControl = UIRefreshControl()
-    fileprivate var fetchingMore = false
-    fileprivate var isAppended = false
+    fileprivate var isfetchingMore = false
+    var isAppended = false
     var container: UIView!
     var loadingView: UIView!
     var activityIndicator: UIActivityIndicatorView!
     var footerSpinner = UIActivityIndicatorView(style: .whiteLarge)
-    let coreDataServiceObj = CoreDataService()
+    let coreDataService = CoreDataService()
     
     // MARK: Constants
     fileprivate let cellIdentifier = "itemsCell"
     fileprivate let titleName = "Things to Deliver"
     fileprivate let pullToRefreshString = "Pull to refresh"
-    fileprivate let dataErrorTitle = "Data Error"
-    fileprivate let internetErrorTitle = "No Internet"
-    fileprivate let internetErrorMessage = "Check your internet connection."
-    fileprivate let entityName = "Item"
+    let dataErrorTitle = "Data Error"
+    let internetErrorTitle = "No Internet"
+    let internetErrorMessage = "Check your internet connection."
     fileprivate let initialOffset = 0
-    fileprivate let numberOfRows = 1
+    fileprivate let numberOfSections = 1
     fileprivate let cellSpacing: CGFloat = 8
+    fileprivate let cornerRadius: CGFloat = 10
+    fileprivate var estimatedRowHeight: CGFloat = 100
+    fileprivate var okAlertTile = "Ok"
     
     // MARK: View lifecycle
     override func viewDidLoad() {
@@ -48,11 +50,11 @@ class HomeVC: UIViewController {
         
         deliveryTableView.register(ItemsCell.self, forCellReuseIdentifier: cellIdentifier)
         
-        deliveryTableView.estimatedRowHeight = 100
+        deliveryTableView.estimatedRowHeight = estimatedRowHeight
         deliveryTableView.rowHeight = UITableView.automaticDimension
         
         showActivityIndicator()
-        checkData(offset: 0, isAppended: false) { _ in }
+        fetchData(offset: initialOffset, isAppended: false) { _ in }
     }
     
     // MARK: Add elements
@@ -66,7 +68,7 @@ class HomeVC: UIViewController {
         }()
         
         refreshControl.attributedTitle = NSAttributedString(string: pullToRefreshString)
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        refreshControl.addTarget(self, action: #selector(pullToRefresh), for: UIControl.Event.valueChanged)
         deliveryTableView.refreshControl = refreshControl
         
         view.addSubview(deliveryTableView)
@@ -80,89 +82,24 @@ class HomeVC: UIViewController {
     }
     
     // MARK: Check for data
-    func checkData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
-        
-        coreDataServiceObj.fetchLocalData(offset: offset) { (errorMsg, localData) in
-            if errorMsg == nil {
-                if localData.isEmpty {
-                    getApiData(offset: offset, isAppended: isAppended) { completed in
-                        if completed {
-                            completion(true)
-                        } else {
-                            completion(false)
-                        }
-                    }
-                } else {
-                    getLocalData(localData: localData, isAppended: isAppended) { completed in
-                        if completed {
-                            completion(true)
-                        } else {
-                            completion(false)
-                        }
-                    }
-                }
-            } else {
+    func fetchData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
+        fetchDataFromLocal(offset: offset) { (errorMsg, localData) in
+            guard errorMsg == nil else {
                 self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
                 completion(false)
+                return
             }
-        }
-    }
-    
-    func getApiData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
-        guard Connectivity.isConnectedToInternet else {
-            self.stopActivityIndicator()
-            self.footerSpinner.stopAnimating()
-            self.deliveryTableView.tableFooterView?.isHidden = true
-            self.showAlert(alertTitle: internetErrorTitle, alertMessage: internetErrorMessage)
-            return
-        }
-        
-        DataService.instance.fetchData(offset: offset) { (completed, error, items)   in
-            if completed {
-                if isAppended {
-                    self.itemsArray.append(contentsOf: items ?? [ItemModel]())
-                } else {
-                    self.itemsArray = items ?? [ItemModel]()
+            
+            if localData?.isEmpty ?? true {
+                fetchingAPIData(offset: offset, isAppended: isAppended) { (completed) in
+                    completion(completed)
                 }
-                self.deliveryTableView.reloadData()
-                self.coreDataServiceObj.saveLocalData(item: items ?? [ItemModel]()) { errorMsg in
-                    if errorMsg == nil {
-                        completion(true)
-                    } else {
-                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
-                        completion(false)
-                    }
-                }
-                self.stopActivityIndicator()
-                self.footerSpinner.stopAnimating()
-                self.deliveryTableView.tableFooterView?.isHidden = true
             } else {
-                self.stopActivityIndicator()
-                self.footerSpinner.stopAnimating()
-                self.deliveryTableView.tableFooterView?.isHidden = true
-                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: error ?? "")
-                completion(false)
+                convertLocalData(localData: localData ?? [Item](), isAppended: isAppended) { completed in
+                   completion(completed)
+                }
             }
         }
-    }
-    
-    func getLocalData(localData: [Item], isAppended: Bool, completion: ((_ completed: Bool) -> Void)) {
-        var itemsData: [ItemModel] = []
-        for data in localData {
-            convertToModel(coreModel: data, completion: { (itemModel) in
-                itemsData.append(itemModel)
-            })
-        }
-        if isAppended {
-            self.itemsArray.append(contentsOf: itemsData)
-        } else {
-            self.itemsArray = itemsData
-        }
-        self.deliveryTableView.reloadData()
-        self.stopActivityIndicator()
-        self.footerSpinner.stopAnimating()
-        self.deliveryTableView.tableFooterView?.isHidden = true
-        completion(true)
     }
     
     // MARK: Convert core data model to simple model
@@ -180,32 +117,95 @@ class HomeVC: UIViewController {
     }
     
     // MARK: Pull to refresh
-    @objc func refresh() {
-        coreDataServiceObj.deleteAllData(entity: entityName) { errorMsg in
-            if errorMsg == nil {
-                checkData(offset: 0, isAppended: false) { completed in
-                    if completed {
+    @objc func pullToRefresh() {
+        fetchData(offset: initialOffset, isAppended: false) { completed in
+            if completed {
+                self.coreDataService.deleteAllData(entity: Constants.instance.entityName) { (errorMsg) in
+                    if errorMsg == nil {
                         self.deliveryTableView.reloadData()
-                        self.refreshControl.endRefreshing()
+                        self.completingRefresh()
+                    } else {
+                        self.completingRefresh()
+                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
                     }
                 }
             } else {
-                self.refreshControl.endRefreshing()
-                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                self.completingRefresh()
             }
         }
     }
     
+    func completingRefresh() {
+        self.isfetchingMore = false
+        self.refreshControl.endRefreshing()
+    }
+    
+    // MARK: For showing alerts
+    func showAlert(alertTitle: String, alertMessage: String) {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: okAlertTile, style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: Extension for TableView
+extension HomeVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return numberOfSections
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return deliveryItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? ItemsCell else {
+            return UITableViewCell()
+        }
+        
+        cell.selectionStyle = .none
+        let deliveryItem = deliveryItems[indexPath.row]
+        cell.update(desc: deliveryItem.desc ?? "", imageUrl: deliveryItem.imageUrl ?? "")
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = ItemDetailsVC()
+    
+        detailVC.setDetails(item: deliveryItems[indexPath.section])
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    // MARK: Pagination
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        if distanceFromBottom < height && !isfetchingMore {
+            isfetchingMore = true
+            addFooter()
+            loadMore()
+        }
+    }
+}
+
+// MARK: Extension for Activity Indicator
+extension HomeVC {
     // MARK: Activity Indicator
     func addActivityIndicator() {
         container = UIView()
-        container.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
+        container.backgroundColor = Constants.instance.backgroundColor
         container.translatesAutoresizingMaskIntoConstraints = false
         
         loadingView = UIView()
-        loadingView.backgroundColor = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 0.4)
+        loadingView.backgroundColor = Constants.instance.backgroundColor
         loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 10
+        loadingView.layer.cornerRadius = cornerRadius
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         
         activityIndicator = UIActivityIndicatorView()
@@ -249,84 +249,33 @@ class HomeVC: UIViewController {
         loadingView.removeFromSuperview()
         container.removeFromSuperview()
     }
-    
-    // MARK: For showing alerts
-    func showAlert(alertTitle: String, alertMessage: String) {
-        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
 }
 
-extension HomeVC: UITableViewDelegate, UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return itemsArray.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfRows
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return cellSpacing
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.backgroundColor = UIColor.clear
-        return headerView
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? ItemsCell else {
-            return UITableViewCell()
-        }
+// MARK: For pagination
+extension HomeVC {
+    func addFooter() {
+        footerSpinner.color = .black
+        footerSpinner.startAnimating()
+        footerSpinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: deliveryTableView.bounds.width, height: CGFloat(44))
         
-        cell.layer.cornerRadius = 15
-        cell.clipsToBounds = true
-        
-        cell.selectionStyle = .none
-        cell.update(itemModel: itemsArray[indexPath.section])
-        return cell
+        deliveryTableView.tableFooterView = footerSpinner
+        deliveryTableView.tableFooterView?.isHidden = false
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = ItemDetailsVC()
-    
-        detailVC.setDetails(item: itemsArray[indexPath.section])
-        navigationController?.pushViewController(detailVC, animated: true)
+    func stopLoader() {
+        stopActivityIndicator()
+        self.footerSpinner.stopAnimating()
+        self.deliveryTableView.tableFooterView?.isHidden = true
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    // MARK: Pagination
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        let height = scrollView.frame.size.height
-        let contentYoffset = scrollView.contentOffset.y
-        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-        if distanceFromBottom < height && !fetchingMore {
-            fetchingMore = true
-            
-            footerSpinner.color = .black
-            footerSpinner.startAnimating()
-            footerSpinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: deliveryTableView.bounds.width, height: CGFloat(44))
-            
-            deliveryTableView.tableFooterView = footerSpinner
-            deliveryTableView.tableFooterView?.isHidden = false
-            
-            self.checkData(offset: self.itemsArray.count, isAppended: true) { completed in
-                if completed {
-                    self.fetchingMore = false
-                    self.footerSpinner.stopAnimating()
-                    self.deliveryTableView.tableFooterView?.isHidden = true
-                } else {
-                    self.fetchingMore = false
-                    self.footerSpinner.stopAnimating()
-                    self.deliveryTableView.tableFooterView?.isHidden = true
-                }
+    func loadMore() {
+        self.fetchData(offset: self.deliveryItems.count, isAppended: true) { completed in
+            if completed {
+                self.isfetchingMore = false
+                self.stopLoader()
+            } else {
+                self.isfetchingMore = false
+                self.stopLoader()
             }
         }
     }

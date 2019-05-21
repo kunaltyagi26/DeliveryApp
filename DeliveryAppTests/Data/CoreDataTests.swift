@@ -60,7 +60,7 @@ class CoreDataTests: XCTestCase {
     func testAddItem() {
         let item = testData()
         coreDataContainerObj.saveLocalData(item: [item]) { (errorMsg) in
-            XCTAssertNil(errorMsg, "There is some error: \(errorMsg)")
+            XCTAssertNil(errorMsg, "There is some error.")
         }
     }
     

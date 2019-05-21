@@ -36,7 +36,7 @@ class ItemDetailsVCTests: XCTestCase {
         itemModel.imageUrl = "https://google.com"
         itemModel.location = LocationModel(address: "Beijing", lat: 112.50, lng: 56.70)
         
-        itemDetailsVC.getDetails(item: itemModel)
+        itemDetailsVC.setDetails(item: itemModel)
         XCTAssertEqual(itemDetailsVC.selectedItem.desc, itemModel.desc)
     }
     

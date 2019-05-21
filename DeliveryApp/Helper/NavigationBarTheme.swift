@@ -12,7 +12,7 @@ class NavigationBarTheme {
     static let instance = NavigationBarTheme()
     
     func changeFont() {
-        let font = UIFont(name: "Helvetica Neue", size: 22)
+        let font = UIFont(name: Constants.instance.fontFamily, size: Constants.instance.fontSize)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: font as Any]
     }
 }
