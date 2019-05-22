@@ -23,18 +23,22 @@ class HomeVC: UIViewController {
     let coreDataService = CoreDataService()
     
     // MARK: Constants
-    fileprivate let cellIdentifier = "itemsCell"
-    fileprivate let titleName = "Things to Deliver"
-    fileprivate let pullToRefreshString = "Pull to refresh"
     let dataErrorTitle = "Data Error"
     let internetErrorTitle = "No Internet"
     let internetErrorMessage = "Check your internet connection."
+    fileprivate let cellIdentifier = "itemsCell"
+    fileprivate let titleName = "Things to Deliver"
+    fileprivate let pullToRefreshString = "Pull to refresh"
     fileprivate let initialOffset = 0
     fileprivate let numberOfSections = 1
     fileprivate let cellSpacing: CGFloat = 8
     fileprivate let cornerRadius: CGFloat = 10
     fileprivate var estimatedRowHeight: CGFloat = 100
     fileprivate var okAlertTile = "Ok"
+    fileprivate let contentViewWidthAndHeight: CGFloat = 80
+    fileprivate let activityViewWidthAndHeight: CGFloat = 40
+    fileprivate let footerSpinnerFrameStart = 0
+    fileprivate let footerSpinnerHeight = 44
     
     // MARK: View lifecycle
     override func viewDidLoad() {
@@ -83,8 +87,10 @@ class HomeVC: UIViewController {
     
     // MARK: Check for data
     func fetchData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool) -> Void)) {
+        
         fetchDataFromLocal(offset: offset) { (errorMsg, localData) in
             guard errorMsg == nil else {
+                stopActivityIndicator()
                 self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
                 completion(false)
                 return
@@ -93,6 +99,7 @@ class HomeVC: UIViewController {
             if localData?.isEmpty ?? true {
                 fetchingAPIData(offset: offset, isAppended: isAppended) { (_, errorMsg, items) in
                     guard errorMsg == nil else {
+                        self.stopActivityIndicator()
                         self.errorWhileFetchingData(errorMsg: errorMsg ?? "")
                         completion(false)
                         return
@@ -112,10 +119,17 @@ class HomeVC: UIViewController {
                             completion(false)
                         }
                     }
-                    self.stopLoader()
+                    self.removeFooter()
                 }
             } else {
-                convertLocalData(localData: localData ?? [Item](), isAppended: isAppended) { completed in
+                convertLocalData(localData: localData ?? [Item](), isAppended: isAppended) { completed, itemsData in
+                    if isAppended {
+                        self.deliveryItems.append(contentsOf: itemsData)
+                    } else {
+                        self.deliveryItems = itemsData
+                    }
+                    self.deliveryTableView.reloadData()
+                    removeFooter()
                    completion(completed)
                 }
             }
@@ -143,19 +157,33 @@ class HomeVC: UIViewController {
     
     // MARK: Pull to refresh
     @objc func pullToRefresh() {
-        self.coreDataService.deleteAllData(entity: Constants.instance.entityName) { (errorMsg) in
-            if errorMsg == nil {
-                self.fetchData(offset: initialOffset, isAppended: false) { completed in
-                    if completed {
-                        self.deliveryTableView.reloadData()
-                        self.completingRefresh()
-                    } else {
-                        self.completingRefresh()
+        fetchingAPIData(offset: initialOffset, isAppended: false) { (_, errorMsg, items) in
+            guard errorMsg == nil else {
+                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                self.completingRefresh()
+                return
+            }
+            if items?.count ?? 0 > 0 {
+                self.coreDataService.deleteAllData(entity: entityName, completionHandler: { (errorMsg) in
+                    guard errorMsg == nil else {
+                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                        return
                     }
-                }
+                })
+                
+                self.saveLocalData(items: items ?? [ItemModel](), completion: { (errorMsg) in
+                    guard errorMsg == nil else {
+                        self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
+                        self.completingRefresh()
+                        return
+                    }
+                })
+                
+                self.deliveryItems = items ?? [ItemModel]()
+                self.deliveryTableView.reloadData()
+                self.completingRefresh()
             } else {
                 self.completingRefresh()
-                self.showAlert(alertTitle: self.dataErrorTitle, alertMessage: errorMsg ?? "")
             }
         }
     }
@@ -191,7 +219,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         
         cell.selectionStyle = .none
         let deliveryItem = deliveryItems[indexPath.row]
-        cell.update(desc: deliveryItem.desc ?? "", imageUrl: deliveryItem.imageUrl ?? "")
+        cell.update(desc: deliveryItem.desc ?? "", imageUrl: deliveryItem.imageUrl ?? "", address: deliveryItem.location?.address ?? "")
         return cell
     }
     
@@ -224,11 +252,11 @@ extension HomeVC {
     // MARK: Activity Indicator
     func addActivityIndicator() {
         container = UIView()
-        container.backgroundColor = Constants.instance.backgroundColor
+        container.backgroundColor = backgroundColor
         container.translatesAutoresizingMaskIntoConstraints = false
         
         loadingView = UIView()
-        loadingView.backgroundColor = Constants.instance.backgroundColor
+        loadingView.backgroundColor = backgroundColor
         loadingView.clipsToBounds = true
         loadingView.layer.cornerRadius = cornerRadius
         loadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -246,13 +274,13 @@ extension HomeVC {
         
         loadingView.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
         loadingView.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true
-        loadingView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        loadingView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        loadingView.widthAnchor.constraint(equalToConstant: contentViewWidthAndHeight).isActive = true
+        loadingView.heightAnchor.constraint(equalToConstant: contentViewWidthAndHeight).isActive = true
         
         activityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: activityViewWidthAndHeight).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: activityViewWidthAndHeight).isActive = true
     }
     
     func showActivityIndicator() {
@@ -281,13 +309,13 @@ extension HomeVC {
     func addFooter() {
         footerSpinner.color = .black
         footerSpinner.startAnimating()
-        footerSpinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: deliveryTableView.bounds.width, height: CGFloat(44))
+        footerSpinner.frame = CGRect(x: CGFloat(footerSpinnerFrameStart), y: CGFloat(footerSpinnerFrameStart), width: deliveryTableView.bounds.width, height: CGFloat(footerSpinnerHeight))
         
         deliveryTableView.tableFooterView = footerSpinner
         deliveryTableView.tableFooterView?.isHidden = false
     }
     
-    func stopLoader() {
+    func removeFooter() {
         stopActivityIndicator()
         self.footerSpinner.stopAnimating()
         self.deliveryTableView.tableFooterView?.isHidden = true
@@ -297,10 +325,10 @@ extension HomeVC {
         self.fetchData(offset: self.deliveryItems.count, isAppended: true) { completed in
             if completed {
                 self.isfetchingMore = false
-                self.stopLoader()
+                self.removeFooter()
             } else {
                 self.isfetchingMore = false
-                self.stopLoader()
+                self.removeFooter()
             }
         }
     }

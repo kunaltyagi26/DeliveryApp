@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: Extension for Core Data
 extension HomeVC {
     func fetchDataFromLocal(offset: Int, completion: (_ error: String?, _ localData: [Item]?) -> Void) {
         coreDataService.fetchLocalData(offset: offset) { (errorMsg, localData) in
@@ -30,7 +31,7 @@ extension HomeVC {
         }
     }
     
-    func convertLocalData(localData: [Item], isAppended: Bool, completion: ((_ completed: Bool) -> Void)) {
+    func convertLocalData(localData: [Item], isAppended: Bool, completion: ((_ completed: Bool, _ items: [ItemModel]) -> Void)) {
         var itemsData: [ItemModel] = []
         for data in localData {
             convertToModel(coreModel: data, completion: { (itemModel) in
@@ -38,13 +39,6 @@ extension HomeVC {
             })
         }
         
-        if isAppended {
-            self.deliveryItems.append(contentsOf: itemsData)
-        } else {
-            self.deliveryItems = itemsData
-        }
-        self.deliveryTableView.reloadData()
-        stopLoader()
-        completion(true)
+        completion(true, itemsData)
     }
 }

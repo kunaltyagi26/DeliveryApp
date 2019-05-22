@@ -33,7 +33,7 @@ class ItemsCell: UITableViewCell {
         itemView = {
             let view = UIView()
             view.backgroundColor = .white
-            view.layer.borderWidth = 1.0
+            view.layer.borderWidth = borderWidth
             view.layer.borderColor = UIColor.black.cgColor
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
@@ -49,8 +49,8 @@ class ItemsCell: UITableViewCell {
         
         itemDescription = {
             let label = UILabel()
-            label.font = UIFont(name: Constants.instance.fontFamily, size: Constants.instance.fontSize)
-            label.numberOfLines = 0
+            label.font = UIFont(name: fontFamily, size: fontSize)
+            label.numberOfLines = numberOfLines
             label.lineBreakMode = .byWordWrapping
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
@@ -66,22 +66,22 @@ class ItemsCell: UITableViewCell {
         itemView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
         itemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         itemView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-        itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+        itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: heightAnchorValue).isActive = true
         
-        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: 16).isActive = true
+        itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: leftAnchorValue).isActive = true
         itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
-        itemImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        itemImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        itemImageView.widthAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
+        itemImageView.heightAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
         
-        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor, constant: 16).isActive = true
-        itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: 16).isActive = true
-        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -16).isActive = true
-        itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: -16).isActive = true
+        itemDescription.topAnchor.constraint(equalTo: itemView.topAnchor, constant: leftAnchorValue).isActive = true
+        itemDescription.leftAnchor.constraint(equalTo: itemImageView.rightAnchor, constant: leftAnchorValue).isActive = true
+        itemDescription.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: bottomAnchorValue).isActive = true
+        itemDescription.rightAnchor.constraint(equalTo: itemView.rightAnchor, constant: bottomAnchorValue).isActive = true
     }
     
     // MARK: Update value of items
-    func update(desc: String, imageUrl: String) {
-        self.itemDescription.text = desc
+    func update(desc: String, imageUrl: String, address: String) {
+        self.itemDescription.text = "\(desc) at \(address)"
         self.itemImageView.af_setImage(withURL: URL(string: imageUrl)!)
     }
     

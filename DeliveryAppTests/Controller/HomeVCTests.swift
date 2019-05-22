@@ -53,4 +53,12 @@ class HomeVCTests: XCTestCase {
     func testInternetConnection() {
         XCTAssertEqual(Connectivity.isConnectedToInternet, true, "Application should have a continuous internet connection.")
     }
+    
+    /*func testCheckCountAfterFetchingFromAPI() {
+        homeVC.getApiData(offset: 0) { (_, _, items) in
+            self.homeVC.deliveryItems = items ?? [ItemModel]()
+            
+            XCTAssertEqual(self.homeVC.deliveryTableView.numberOfRows(inSection: 0), items?.count)
+        }
+    }*/
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: Extension for API
 extension HomeVC {
     func getApiData(offset: Int, completion: @escaping ((_ completed: Bool, _ error: String?, _ localData: [ItemModel]?) -> Void)) {
         APIDataService.instance.fetchData(offset: offset) { (completed, errorMsg, items)   in
@@ -21,7 +22,7 @@ extension HomeVC {
     
     func fetchingAPIData(offset: Int, isAppended: Bool, completion: @escaping ((_ completed: Bool, _ errorMsg: String?, _ items: [ItemModel]?) -> Void)) {
         guard Connectivity.isConnectedToInternet else {
-            stopLoader()
+            removeFooter()
             self.showAlert(alertTitle: internetErrorTitle, alertMessage: internetErrorMessage)
             return
         }

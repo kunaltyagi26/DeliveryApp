@@ -29,7 +29,7 @@ import Firebase
         
         NavigationBarTheme.instance.changeFont()
         
-        GMSServices.provideAPIKey(Constants.instance.apiKey)
+        GMSServices.provideAPIKey(apiKey)
         FirebaseApp.configure()
         
         return true

@@ -11,9 +11,11 @@ import CoreData
 
 class CoreDataService {
 
+    // MARK: Variables
     weak var appDelegate = UIApplication.shared.delegate as? AppDelegate
     var context: NSManagedObjectContext!
     
+    // MARK: Initialization
     init() {
         context = appDelegate?.persistentContainer.viewContext
     }
@@ -24,6 +26,7 @@ class CoreDataService {
         context = container.viewContext
     }
     
+    // MARK: Save local data
     func saveLocalData(item: [ItemModel], completionHandler: ((_ error: String?) -> Void)) {
         for itemModel in item {
             let item = Item(context: self.context!)
@@ -44,10 +47,11 @@ class CoreDataService {
         }
     }
     
+    // MARK: Fetch local data
     func fetchLocalData(offset: Int, completion: (_ error: String?, _ localData: [Item]) -> Void) {
-        let fetchRequest = NSFetchRequest<Item>(entityName: Constants.instance.entityName)
+        let fetchRequest = NSFetchRequest<Item>(entityName: entityName)
         fetchRequest.fetchOffset = offset
-        fetchRequest.fetchLimit = Constants.instance.limit
+        fetchRequest.fetchLimit = limit
         var data = [Item]()
         do {
             data = try context?.fetch(fetchRequest) ?? []
@@ -57,6 +61,7 @@ class CoreDataService {
         }
     }
     
+    // MARK: Batch delete
     func deleteAllData(entity: String, completionHandler: ((_ error: String?) -> Void)) {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: request)
