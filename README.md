@@ -22,7 +22,7 @@ To run the project :
 # Design Pattern
 ## MVC
 
-<img width="537" alt="Screenshot 2019-05-22 at 1 17 11 AM" src="https://user-images.githubusercontent.com/28871881/58125973-5be42280-7c01-11e9-84a6-1bcf8e15f3fd.png">
+<img width="461" alt="Screenshot 2019-05-22 at 3 11 59 PM" src="https://user-images.githubusercontent.com/28871881/58164731-e6666980-7c75-11e9-92e4-d42ce4fff198.png">
 
 - Model : Model stores the data from server and local databse. ItemModel is used for holding data of delivery items and LocationModel is used for holding data of location for the delivery items. Model is interacting with the data service layer.
     1. CoreDataService : This class interacts with database i.e CoreData. It performs the all database related operations and responds back to the view controller.
@@ -92,11 +92,11 @@ Or by HomeBrew by running "brew install swiftlint" command
 - Unit testing is done by using XCTest.
 
 # Application Screenshot
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 56 44](https://user-images.githubusercontent.com/28871881/58124744-7a94ea00-7bfe-11e9-9fd7-7d8c60728df2.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 10](https://user-images.githubusercontent.com/28871881/58162880-83bf9e80-7c72-11e9-9f99-46b481492710.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 56 58](https://user-images.githubusercontent.com/28871881/58124805-9d270300-7bfe-11e9-8e0b-cd32d3592149.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 26](https://user-images.githubusercontent.com/28871881/58162925-976b0500-7c72-11e9-808d-e2bbd3b2f3d5.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 57 03](https://user-images.githubusercontent.com/28871881/58124852-b334c380-7bfe-11e9-9fad-e8998f3ad48a.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 31](https://user-images.githubusercontent.com/28871881/58162951-a5b92100-7c72-11e9-98fc-4df3e9cb9717.png)
 
 # External Library
 None
