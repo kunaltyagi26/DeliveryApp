@@ -92,11 +92,11 @@ Or by HomeBrew by running "brew install swiftlint" command
 - Unit testing is done by using XCTest.
 
 # Application Screenshot
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 56 44](https://user-images.githubusercontent.com/28871881/58124744-7a94ea00-7bfe-11e9-9fd7-7d8c60728df2.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 10](https://user-images.githubusercontent.com/28871881/58162880-83bf9e80-7c72-11e9-9f99-46b481492710.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 56 58](https://user-images.githubusercontent.com/28871881/58124805-9d270300-7bfe-11e9-8e0b-cd32d3592149.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 26](https://user-images.githubusercontent.com/28871881/58162925-976b0500-7c72-11e9-808d-e2bbd3b2f3d5.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 00 57 03](https://user-images.githubusercontent.com/28871881/58124852-b334c380-7bfe-11e9-9fad-e8998f3ad48a.png)
+![Simulator Screen Shot - iPhone Xs - 2019-05-22 at 14 47 31](https://user-images.githubusercontent.com/28871881/58162951-a5b92100-7c72-11e9-98fc-4df3e9cb9717.png)
 
 # External Library
 None
