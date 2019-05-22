@@ -22,7 +22,6 @@ class ItemDetailsVC: UIViewController {
     // MARK: Constants
     fileprivate let titleName = "Delivery Details"
     fileprivate let zoomLevel: Float = 15.0
-    fileprivate let placeholderImageUrl = "http://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg"
     fileprivate let cornerRadius: CGFloat = 15
     fileprivate let mapViewHeightMultiplier: CGFloat = 0.85
     fileprivate let itemViewLeftAnchor: CGFloat = 8
@@ -99,7 +98,8 @@ class ItemDetailsVC: UIViewController {
         itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: heightAnchorValue).isActive = true
         
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: leftAnchorValue).isActive = true
-        itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
+        itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor, constant: leftAnchorValue).isActive = true
+        itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: bottomAnchorValue).isActive = true
         itemImageView.widthAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
         itemImageView.heightAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
         
@@ -128,12 +128,23 @@ class ItemDetailsVC: UIViewController {
     // MARK: Update value of item
     func updateItemDetails() {
         var url = ""
+        var address = ""
+        var description = ""
+        
         if let imageUrl = selectedItem.imageUrl {
             url = imageUrl
         } else {
             url = placeholderImageUrl
         }
+        
+        if let desc = selectedItem.desc {
+            description = desc
+        }
+        
+        if let location = selectedItem.location {
+            address = location.address ?? ""
+        }
         self.itemImageView.af_setImage(withURL: URL(string: url)!)
-        self.itemDescription.text = "\(String(describing: selectedItem.desc!)) at \(String(describing: selectedItem.location!.address!))"
+        self.itemDescription.text = "\(String(describing: description)) at \(String(describing: address))"
     }
 }

@@ -20,7 +20,8 @@ class HomeVC: UIViewController {
     var loadingView: UIView!
     var activityIndicator: UIActivityIndicatorView!
     var footerSpinner = UIActivityIndicatorView(style: .whiteLarge)
-    let coreDataService = CoreDataService()
+    var coreDataService: CoreDataServiceDelegate = CoreDataService()
+    var apiDataService: APIDataServiceDelegate = APIDataService()
     
     // MARK: Constants
     let dataErrorTitle = "Data Error"

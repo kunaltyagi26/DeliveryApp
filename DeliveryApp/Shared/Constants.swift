@@ -20,3 +20,4 @@ let leftAnchorValue: CGFloat = 16
 let heightAnchorValue: CGFloat = 120
 let borderWidth: CGFloat = 1.0
 let numberOfLines = 0
+let placeholderImageUrl = "https://www.independentmediators.co.uk/wp-content/uploads/2016/02/placeholder-image.jpg"

@@ -69,7 +69,8 @@ class ItemsCell: UITableViewCell {
         itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: heightAnchorValue).isActive = true
         
         itemImageView.leftAnchor.constraint(equalTo: itemView.leftAnchor, constant: leftAnchorValue).isActive = true
-        itemImageView.centerYAnchor.constraint(equalTo: itemView.centerYAnchor).isActive = true
+        itemImageView.topAnchor.constraint(equalTo: itemView.topAnchor, constant: leftAnchorValue).isActive = true
+        itemImageView.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: bottomAnchorValue).isActive = true
         itemImageView.widthAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
         itemImageView.heightAnchor.constraint(equalToConstant: heightAnchorValue).isActive = true
         

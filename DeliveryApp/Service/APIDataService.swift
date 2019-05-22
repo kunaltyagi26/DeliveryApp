@@ -10,7 +10,11 @@ import Foundation
 import Alamofire
 import ObjectMapper
 
-class APIDataService {
+protocol APIDataServiceDelegate: class {
+    func fetchData(offset: Int, completionHandler: @escaping ((_ isResponse: Bool, _ error: String?, _ itemArray: [ItemModel]?) -> Void))
+}
+
+class APIDataService: APIDataServiceDelegate {
     
     // MARK: Variables
     static let instance = APIDataService()

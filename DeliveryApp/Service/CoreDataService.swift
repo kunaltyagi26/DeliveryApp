@@ -9,7 +9,13 @@
 import UIKit
 import CoreData
 
-class CoreDataService {
+protocol CoreDataServiceDelegate: class {
+    func saveLocalData(item: [ItemModel], completionHandler: ((_ error: String?) -> Void))
+    func fetchLocalData(offset: Int, completion: (_ error: String?, _ localData: [Item]) -> Void)
+    func deleteAllData(entity: String, completionHandler: ((_ error: String?) -> Void))
+}
+
+class CoreDataService: CoreDataServiceDelegate {
 
     // MARK: Variables
     weak var appDelegate = UIApplication.shared.delegate as? AppDelegate
